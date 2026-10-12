@@ -3,7 +3,705 @@
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 
+@custom-variant dark (&:is(.dark *));
+
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
 }
+
+/*
+  Paleta del diseño `diseno-interfaz-ecommerce`:
+  Baltic Blue #085CAB · Prussian Blue #061A40 · Sapphire #0353A4
+  Cornflower Ocean #006DAA · Deep Space Blue #003559
+*/
+:root {
+    color-scheme: light;
+
+    --background: #f3f6fa;
+    --foreground: #061a40;
+    --card: #ffffff;
+    --card-foreground: #061a40;
+    --popover: #ffffff;
+    --popover-foreground: #061a40;
+    --primary: #085cab;
+    --primary-foreground: #ffffff;
+    --primary-soft: #e3eef9;
+    --secondary: #eaf0f7;
+    --secondary-foreground: #003559;
+    --muted: #eef2f7;
+    --muted-foreground: #5b6b82;
+    --accent: #e3eef9;
+    --accent-foreground: #0353a4;
+    --destructive: #c62f3b;
+    --destructive-soft: #fbe9ea;
+    --border: #dde4ee;
+    --input: #d3dce8;
+    --ring: #006daa;
+    --radius: 0.625rem;
+
+    --sidebar: #061a40;
+    --sidebar-foreground: #d6e2f3;
+    --sidebar-muted: #7f93b3;
+    --sidebar-primary: #085cab;
+    --sidebar-primary-foreground: #ffffff;
+    --sidebar-accent: #0b2756;
+    --sidebar-accent-foreground: #ffffff;
+    --sidebar-border: #12305f;
+    --sidebar-ring: #006daa;
+}
+
+.dark {
+    color-scheme: dark;
+
+    --background: #04122e;
+    --foreground: #e3ebf7;
+    --card: #071d45;
+    --card-foreground: #e3ebf7;
+    --popover: #071d45;
+    --popover-foreground: #e3ebf7;
+    --primary: #2f86d6;
+    --primary-foreground: #ffffff;
+    --primary-soft: #0c2f5f;
+    --secondary: #0b2756;
+    --secondary-foreground: #d6e2f3;
+    --muted: #0a2350;
+    --muted-foreground: #8ea2c2;
+    --accent: #0c2f5f;
+    --accent-foreground: #9cc8f0;
+    --destructive: #ef5a64;
+    --destructive-soft: #3a1426;
+    --border: #13305f;
+    --input: #1a3a6c;
+    --ring: #006daa;
+
+    --sidebar: #030d24;
+    --sidebar-foreground: #c9d7ec;
+    --sidebar-muted: #6f84a6;
+    --sidebar-primary: #085cab;
+    --sidebar-primary-foreground: #ffffff;
+    --sidebar-accent: #0a2350;
+    --sidebar-accent-foreground: #ffffff;
+    --sidebar-border: #0e2752;
+    --sidebar-ring: #006daa;
+}
+
+@theme inline {
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --color-card: var(--card);
+    --color-card-foreground: var(--card-foreground);
+    --color-popover: var(--popover);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-primary-soft: var(--primary-soft);
+    --color-secondary: var(--secondary);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-accent: var(--accent);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-destructive: var(--destructive);
+    --color-destructive-soft: var(--destructive-soft);
+    --color-border: var(--border);
+    --color-input: var(--input);
+    --color-ring: var(--ring);
+
+    --color-sidebar: var(--sidebar);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-sidebar-muted: var(--sidebar-muted);
+    --color-sidebar-primary: var(--sidebar-primary);
+    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-ring: var(--sidebar-ring);
+
+    --radius-sm: calc(var(--radius) * 0.6);
+    --radius-md: calc(var(--radius) * 0.8);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) * 1.4);
+    --radius-2xl: calc(var(--radius) * 1.8);
+}
+
+@layer base {
+    * {
+        @apply border-border;
+    }
+
+    html {
+        -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+        @apply bg-background text-foreground font-sans antialiased;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        @apply text-foreground;
+    }
+}
+
+@layer components {
+    /* ------------------------------ Estructura ------------------------------ */
+    .ut-main {
+        @apply flex-1 px-4 py-6 md:px-8 md:py-8;
+    }
+
+    .ut-container {
+        @apply mx-auto w-full max-w-7xl;
+    }
+
+    /* -------------------------------- Tarjeta ------------------------------- */
+    .ut-card {
+        @apply overflow-hidden rounded-xl border bg-card shadow-sm shadow-foreground/5;
+    }
+
+    .ut-card-header {
+        @apply flex items-center justify-between gap-3 border-b px-5 py-4;
+    }
+
+    .ut-card-body {
+        @apply p-5 md:p-6;
+    }
+
+    .ut-card-footer {
+        @apply flex flex-col items-center justify-between gap-3 border-t bg-muted/40 px-4 py-3 sm:flex-row;
+    }
+
+    /* ------------------------------- Botones -------------------------------- */
+    .ut-btn {
+        @apply inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 rounded-lg border border-transparent text-sm font-semibold whitespace-nowrap transition-colors outline-none select-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/40 active:translate-y-px disabled:pointer-events-none disabled:opacity-50;
+    }
+
+    .ut-btn-md {
+        @apply h-10 px-4;
+    }
+
+    .ut-btn-sm {
+        @apply h-9 px-3;
+    }
+
+    .ut-btn-primary {
+        @apply bg-primary text-primary-foreground shadow-sm hover:bg-primary/90;
+    }
+
+    .ut-btn-outline {
+        @apply border-border bg-card text-foreground hover:bg-muted;
+    }
+
+    .ut-btn-ghost {
+        @apply text-muted-foreground hover:bg-muted hover:text-foreground;
+    }
+
+    .ut-btn-danger {
+        @apply bg-destructive text-primary-foreground shadow-sm hover:bg-destructive/90;
+    }
+
+    .ut-btn-danger-soft {
+        @apply border-destructive/30 bg-destructive-soft text-destructive hover:bg-destructive/15;
+    }
+
+    .ut-icon-btn {
+        @apply flex size-8 cursor-pointer items-center justify-center rounded-md border border-transparent text-muted-foreground transition-colors outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/40;
+    }
+
+    .ut-icon-btn-default:hover {
+        @apply border-border bg-primary-soft text-primary;
+    }
+
+    .ut-icon-btn-danger:hover {
+        @apply border-destructive/30 bg-destructive-soft text-destructive;
+    }
+
+    .ut-icon-btn-outline {
+        @apply border-border bg-background hover:bg-muted hover:text-foreground;
+    }
+
+    /* -------------------------- Cabecera de página -------------------------- */
+    .ut-page-header {
+        @apply mb-6 flex flex-col gap-4 md:flex-row md:items-end md:justify-between;
+    }
+
+    .ut-breadcrumb {
+        @apply flex flex-wrap items-center gap-1.5 text-xs font-medium text-muted-foreground;
+    }
+
+    .ut-breadcrumb-current {
+        @apply text-primary;
+    }
+
+    .ut-page-title {
+        @apply mt-1.5 text-balance text-2xl font-extrabold tracking-tight md:text-3xl;
+    }
+
+    .ut-page-description {
+        @apply mt-1.5 text-pretty text-sm leading-relaxed text-muted-foreground;
+    }
+
+    /* -------------------------------- Tabla --------------------------------- */
+    .ut-toolbar {
+        @apply flex flex-col gap-3 border-b p-4 md:flex-row md:items-center md:justify-between;
+    }
+
+    .ut-toolbar-group {
+        @apply flex flex-1 flex-col gap-3 sm:flex-row sm:items-center;
+    }
+
+    .ut-table-wrap {
+        @apply overflow-x-auto;
+    }
+
+    .ut-table {
+        @apply w-full min-w-[720px] border-collapse text-sm;
+    }
+
+    .ut-table thead tr {
+        @apply bg-muted/60;
+    }
+
+    .ut-table th {
+        @apply px-4 py-3 text-left text-xs font-semibold tracking-wider text-muted-foreground uppercase;
+    }
+
+    .ut-table tbody tr {
+        @apply border-t transition-colors hover:bg-muted/40;
+    }
+
+    .ut-table td {
+        @apply px-4 py-3 align-middle;
+    }
+
+    .ut-th-right,
+    .ut-td-right {
+        @apply text-right;
+    }
+
+    .ut-th-center,
+    .ut-td-center {
+        @apply text-center;
+    }
+
+    .ut-empty {
+        @apply flex flex-col items-center gap-2 px-4 py-16 text-center;
+    }
+
+    /* ------------------------------ Entradas -------------------------------- */
+    .ut-input,
+    .ut-select,
+    .ut-textarea {
+        @apply w-full rounded-lg border bg-background text-sm text-foreground placeholder:text-muted-foreground focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring/20;
+    }
+
+    .ut-input,
+    .ut-select {
+        @apply h-10 px-3;
+    }
+
+    .ut-select {
+        @apply pr-8;
+    }
+
+    .ut-textarea {
+        @apply min-h-28 px-3 py-2 leading-relaxed;
+    }
+
+    .ut-input-search {
+        @apply pl-9;
+    }
+
+    .ut-input-error,
+    .ut-select-error,
+    .ut-textarea-error {
+        @apply border-destructive focus:border-destructive focus:ring-destructive/20;
+    }
+
+    .ut-check {
+        @apply size-4 cursor-pointer rounded accent-primary;
+    }
+
+    .ut-field {
+        @apply flex flex-col gap-1.5;
+    }
+
+    .ut-label {
+        @apply text-sm font-semibold text-foreground;
+    }
+
+    .ut-hint {
+        @apply text-xs text-muted-foreground;
+    }
+
+    .ut-error {
+        @apply text-xs font-medium text-destructive;
+    }
+
+    .ut-field-row {
+        @apply grid gap-5 md:grid-cols-2;
+    }
+
+    /* -------------------------------- Badges -------------------------------- */
+    .ut-badge {
+        @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold;
+    }
+
+    .ut-badge::before {
+        content: '';
+        inline-size: 0.375rem;
+        block-size: 0.375rem;
+        border-radius: 9999px;
+        background: currentcolor;
+    }
+
+    .ut-badge-primary {
+        @apply bg-primary-soft text-accent-foreground;
+    }
+
+    .ut-badge-info {
+        @apply bg-secondary text-secondary-foreground;
+    }
+
+    .ut-badge-neutral {
+        @apply bg-muted text-muted-foreground;
+    }
+
+    .ut-badge-danger {
+        @apply bg-destructive-soft text-destructive;
+    }
+
+    .ut-badge-outline {
+        @apply border border-primary/40 text-primary;
+    }
+
+    .ut-badge-plain::before {
+        display: none;
+    }
+
+    /* -------------------------------- Alertas ------------------------------- */
+    .ut-alert {
+        @apply mb-6 flex items-start gap-3 rounded-xl border px-4 py-3 text-sm;
+    }
+
+    .ut-alert-success {
+        @apply border-primary/30 bg-primary-soft text-accent-foreground;
+    }
+
+    .ut-alert-error {
+        @apply border-destructive/30 bg-destructive-soft text-destructive;
+    }
+
+    /* ------------------------------ Paginación ------------------------------ */
+    .ut-page-btn {
+        @apply flex size-8 cursor-pointer items-center justify-center rounded-md border bg-background font-mono text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground disabled:pointer-events-none disabled:opacity-40;
+    }
+
+    .ut-page-btn-active {
+        @apply border-transparent bg-primary text-primary-foreground shadow-sm;
+    }
+
+    .ut-page-span {
+        @apply px-1.5 text-muted-foreground;
+    }
+
+    /* ------------------------------ Utilidades ------------------------------ */
+    .ut-kbd {
+        @apply pointer-events-none absolute top-1/2 right-2.5 -translate-y-1/2 rounded border bg-card px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground;
+    }
+
+    .ut-avatar {
+        @apply flex shrink-0 items-center justify-center rounded-full bg-secondary text-xs font-bold text-secondary-foreground;
+    }
+
+    .ut-scroll::-webkit-scrollbar {
+        inline-size: 6px;
+        block-size: 6px;
+    }
+
+    .ut-scroll::-webkit-scrollbar-thumb {
+        background: var(--sidebar-border);
+        border-radius: 9999px;
+    }
+
+    .ut-scroll::-webkit-scrollbar-track {
+        background: transparent;
+    }
+}
+
+/* ------------------------------- Sidebar --------------------------------- */
+.ut-sidebar {
+    position: fixed;
+    inset-block: 0;
+    inset-inline-start: 0;
+    z-index: 50;
+    display: flex;
+    inline-size: 18rem;
+    flex-direction: column;
+    background: var(--sidebar);
+    color: var(--sidebar-foreground);
+    translate: -100% 0;
+    transition:
+        inline-size 0.3s ease,
+        translate 0.3s ease;
+}
+
+html[data-mobile-open] .ut-sidebar {
+    translate: 0 0;
+}
+
+.ut-sidebar-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    background: color-mix(in srgb, var(--sidebar) 60%, transparent);
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+html[data-mobile-open] .ut-sidebar-backdrop {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+@media (min-width: 64rem) {
+    .ut-sidebar {
+        position: sticky;
+        top: 0;
+        block-size: 100dvh;
+        translate: 0 0;
+    }
+
+    .ut-sidebar-backdrop {
+        display: none;
+    }
+
+    html[data-sidebar='collapsed'] .ut-sidebar {
+        inline-size: 5rem;
+    }
+
+    html[data-sidebar='collapsed'] .ut-sidebar-label,
+    html[data-sidebar='collapsed'] .ut-sidebar-heading,
+    html[data-sidebar='collapsed'] .ut-nav-badge {
+        display: none;
+    }
+
+    html[data-sidebar='collapsed'] .ut-nav-link {
+        justify-content: center;
+        padding-inline: 0;
+    }
+}
+
+.ut-sidebar-header {
+    display: flex;
+    block-size: 4rem;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 0.75rem;
+    border-bottom: 1px solid var(--sidebar-border);
+    padding-inline: 1.25rem;
+}
+
+.ut-sidebar-brand-icon {
+    display: flex;
+    inline-size: 2.25rem;
+    block-size: 2.25rem;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.5rem;
+    background: var(--sidebar-primary);
+    color: var(--sidebar-primary-foreground);
+}
+
+.ut-nav {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 1.5rem;
+    overflow-y: auto;
+    padding: 1.25rem 0.75rem;
+}
+
+.ut-nav-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.ut-nav-heading {
+    padding-inline: 0.75rem;
+    padding-block-end: 0.25rem;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--sidebar-muted);
+}
+
+.ut-nav-link {
+    position: relative;
+    display: flex;
+    block-size: 2.5rem;
+    align-items: center;
+    gap: 0.75rem;
+    border-radius: 0.5rem;
+    padding-inline: 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition:
+        background-color 0.15s ease,
+        color 0.15s ease;
+    outline: none;
+}
+
+.ut-nav-link:focus-visible {
+    outline: 2px solid var(--sidebar-ring);
+    outline-offset: 2px;
+}
+
+.ut-nav-link-active {
+    background: var(--sidebar-primary);
+    color: var(--sidebar-primary-foreground);
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.15);
+}
+
+.ut-nav-link-inactive {
+    color: var(--sidebar-foreground);
+}
+
+.ut-nav-link-inactive:hover {
+    background: var(--sidebar-accent);
+    color: var(--sidebar-accent-foreground);
+}
+
+.ut-nav-link svg {
+    inline-size: 1.125rem;
+    block-size: 1.125rem;
+    flex-shrink: 0;
+}
+
+.ut-nav-label {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ut-nav-badge {
+    border-radius: 9999px;
+    padding-inline: 0.5rem;
+    padding-block: 0.125rem;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    background: var(--sidebar-accent);
+    color: var(--sidebar-accent-foreground);
+}
+
+.ut-nav-link-active .ut-nav-badge {
+    background: color-mix(in srgb, var(--sidebar-primary-foreground) 20%, transparent);
+    color: var(--sidebar-primary-foreground);
+}
+
+.ut-sidebar-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    border-top: 1px solid var(--sidebar-border);
+    padding: 1rem 0.75rem;
+}
+
+.ut-collapse-icon-open {
+    display: none;
+}
+
+html[data-sidebar='collapsed'] .ut-collapse-icon-close {
+    display: none;
+}
+
+html[data-sidebar='collapsed'] .ut-collapse-icon-open {
+    display: block;
+}
+
+@media (min-width: 64rem) {
+    html[data-sidebar='collapsed'] .ut-collapse-desktop {
+        display: flex;
+    }
+}
+
+/* -------------------------------- Topbar --------------------------------- */
+.ut-topbar {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    display: flex;
+    block-size: 4rem;
+    align-items: center;
+    gap: 0.75rem;
+    border-bottom: 1px solid var(--border);
+    background: color-mix(in srgb, var(--card) 85%, transparent);
+    backdrop-filter: blur(12px);
+    padding-inline: 1rem;
+}
+
+@media (min-width: 768px) {
+    .ut-topbar {
+        padding-inline: 1.5rem;
+    }
+}
+
+/* ------------------------------ Toggle tema ------------------------------ */
+.ut-theme-sun {
+    display: none;
+}
+
+html.dark .ut-theme-sun {
+    display: block;
+}
+
+html.dark .ut-theme-moon {
+    display: none;
+}
+
+/* --------------------------- Diálogo de confirmación --------------------- */
+.ut-dialog {
+    inline-size: min(92vw, 420px);
+    margin: auto;
+    padding: 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    background: var(--card);
+    color: var(--card-foreground);
+    box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+}
+
+.ut-dialog::backdrop {
+    background: color-mix(in srgb, var(--foreground) 40%, transparent);
+    backdrop-filter: blur(4px);
+}
+
+.ut-dialog-icon {
+    display: flex;
+    inline-size: 2.5rem;
+    block-size: 2.5rem;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    background: var(--destructive-soft);
+    color: var(--destructive);
+}
+
+.ut-dialog-icon svg {
+    inline-size: 1.25rem;
+    block-size: 1.25rem;
+}
+
