@@ -38,7 +38,7 @@
 
                     <a
                         href="{{ $url }}"
-                        title="{{ $item['label'] }}"
+                        aria-label="{{ $item['label'] }}"
                         @if ($active) aria-current="page" @endif
                         @class([
                             'ut-nav-link',
@@ -48,6 +48,7 @@
                     >
                         <x-icon :name="$item['icon']" />
                         <span class="ut-nav-label">{{ $item['label'] }}</span>
+                        <span class="ut-nav-tooltip" aria-hidden="true">{{ $item['label'] }}</span>
                     </a>
                 @endforeach
             </div>

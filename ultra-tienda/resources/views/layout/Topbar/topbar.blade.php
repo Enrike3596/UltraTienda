@@ -35,7 +35,7 @@
         <x-icon name="panel-left-open" size="size-5" class="ut-collapse-icon-open" />
     </button>
 
-    <div class="relative hidden max-w-md flex-1 md:block">
+    <div class="ut-topbar-search relative hidden max-w-md min-w-0 flex-1 md:block">
         <x-icon
             name="search"
             size="size-4"
@@ -74,11 +74,11 @@
 
         <div class="mx-2 hidden h-8 w-px bg-border sm:block" aria-hidden="true"></div>
 
-        <div class="flex items-center gap-3 rounded-lg p-1 pr-2">
+        <div class="ut-topbar-user flex min-w-0 items-center gap-3 rounded-lg p-1 pr-2">
             <span class="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-bold text-primary-foreground">
                 {{ $initials }}
             </span>
-            <span class="hidden text-left sm:block">
+            <span class="ut-topbar-user-details hidden min-w-0 text-left sm:block">
                 <span class="block text-sm leading-tight font-semibold">{{ $displayName }}</span>
                 <span class="block text-xs leading-tight text-muted-foreground">{{ $roleName }}</span>
             </span>
