@@ -804,3 +804,43 @@ html.dark .ut-theme-moon {
     inline-size: 1.25rem;
     block-size: 1.25rem;
 }
+
+/* ------------------------- Acceso (login / recuperación) ------------------ */
+.ut-auth-page {
+    min-height: 100dvh;
+    background: linear-gradient(180deg, #cfe4f7 0%, #e6effa 38%, var(--background) 100%);
+}
+
+.dark .ut-auth-page {
+    background: linear-gradient(180deg, #061533 0%, #05163a 38%, var(--background) 100%);
+}
+
+/* Borde degradado del sistema para la tarjeta de acceso (solo borde) */
+.ut-auth-card-border {
+    border-radius: 20px;
+    padding: 2px;
+    background-image: linear-gradient(163deg, var(--primary) 0%, #0353a4 100%);
+}
+
+.dark .ut-auth-card-border {
+    background-image: linear-gradient(163deg, #2f86d6 0%, #0353a4 100%);
+}
+
+.ut-auth-card {
+    border-radius: 18px;
+    background-color: var(--card);
+    color: var(--card-foreground);
+    padding: 1.1rem 1rem;
+}
+
+/* CTA con degradado del sistema */
+.ut-auth-btn {
+    background-image: linear-gradient(90deg, var(--primary), #0353a4);
+    color: var(--primary-foreground);
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.15), 0 4px 6px -4px rgb(0 0 0 / 0.15);
+    transition: filter 0.2s ease, transform 0.1s ease;
+}
+
+.ut-auth-btn:hover {
+    filter: brightness(1.08);
+}

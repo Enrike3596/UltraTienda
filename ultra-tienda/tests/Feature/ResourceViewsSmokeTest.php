@@ -17,11 +17,17 @@ class ResourceViewsSmokeTest extends TestCase
     use RefreshDatabase;
 
     private Category $category;
+
     private Product $product;
+
     private Order $order;
+
     private OrderDetail $orderDetail;
+
     private OrderPayment $orderPayment;
+
     private Role $role;
+
     private User $user;
 
     protected function setUp(): void
@@ -56,6 +62,8 @@ class ResourceViewsSmokeTest extends TestCase
             'amount' => 50,
             'payment_method' => 'efectivo',
         ]);
+
+        $this->actingAs($this->user);
     }
 
     public function test_all_resource_views_render_with_the_admin_layout(): void

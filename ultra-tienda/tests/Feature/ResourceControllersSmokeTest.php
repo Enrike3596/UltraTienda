@@ -16,6 +16,21 @@ class ResourceControllersSmokeTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $role = Role::create(['name' => 'superadmin']);
+        $user = User::create([
+            'name' => 'Administrador',
+            'email' => 'admin@example.com',
+            'password' => 'secreta-123',
+            'role_id' => $role->id,
+        ]);
+
+        $this->actingAs($user);
+    }
+
     private function makeCategory(): Category
     {
         return Category::create(['name' => 'Libros', 'orden' => 1]);

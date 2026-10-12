@@ -74,6 +74,18 @@
 
         <div class="mx-2 hidden h-8 w-px bg-border sm:block" aria-hidden="true"></div>
 
+        <form method="POST" action="{{ route('logout') }}">
+            @csrf
+            <button
+                type="submit"
+                class="ut-icon-btn ut-icon-btn-danger"
+                title="Cerrar sesión"
+                aria-label="Cerrar sesión"
+            >
+                <x-icon name="log-out" size="size-5" />
+            </button>
+        </form>
+
         <div class="ut-topbar-user flex min-w-0 items-center gap-3 rounded-lg p-1 pr-2">
             <span class="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-bold text-primary-foreground">
                 {{ $initials }}
