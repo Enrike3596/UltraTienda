@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-// Tabla: productos — spec: id, categoria_id, nombre, descripcion, precio, imagen,
-// disponible, activo. Guarda cada producto y sus características.
+
 return new class extends Migration
 {
     /**
@@ -15,15 +14,12 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            // CAMBIO vs. versión anterior: FK a categories (antes columna suelta sin integridad).
             $table->foreignId('category_id')->constrained('categories')
                 ->cascadeOnUpdate()->restrictOnDelete();
             $table->string('name')->comment('Nombre del producto (spec: nombre)');
             $table->text('description')->nullable()->comment('Características del producto (spec: descripcion)');
-            // CAMBIO: decimal(12,2) para soportar precios altos (antes 8,2 se quedaba corto).
             $table->decimal('price', 12, 2)->comment('Precio de venta (spec: precio)');
             $table->string('image')->nullable()->comment('Ruta de la imagen (spec: imagen)');
-            // CAMBIO: bandera "disponible" (hay stock) separada de "activo" (visible).
             $table->boolean('disponible')->default(true)->comment('Hay stock para vender (spec: disponible)');
             $table->boolean('is_active')->default(true)->comment('Visible en la tienda (spec: activo)');
             $table->timestamps();
