@@ -200,7 +200,7 @@ class AuthController extends Controller
         }
 
         $user->password = Hash::make($request->input('password'));
-$user->save();
+        $user->save();
 
         DB::table(config('auth.passwords.users.table'))->where('email', $email)->delete();
         $request->session()->forget('recovery_email');
