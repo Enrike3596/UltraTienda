@@ -1,58 +1,138 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# UltraTienda - Sistema de E-commerce
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Descripción general
 
-## About Laravel
+**UltraTienda** es un sistema completo de comercio electrónico construido con Laravel, diseñado para gestionar catálogos de productos, órdenes de compra, pagos y control de usuarios con roles diferenciados. El sistema proporciona una interfaz administrativa completa y una experiencia de usuario optimizada para la venta en línea.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🚀 Características principales
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- **Gestión de catálogos**: CRUD completo de productos y categorías con validación de stock y estado activo
+- **Carro de compras y órdenes**: Ciclo completo de órdenes desde creación hasta entrega con seguimiento de pagos
+- **Sistema de pagos**: Múltiples métodos de pago con registro de montos, estatus y fechas
+- **Autenticación y roles**: Sistema de autenticación robusto con roles (admin, client) y permisos diferenciados
+- **Panel de administración**: Interfaz completa para gestión de todos los recursos del sistema
+- **Catálogo filtrado**: Productos disponibles y activos, categorías ordenables
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 📸 Capturas de pantalla
 
-## Learning Laravel
+*(Agregar capturas aquí)*
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## 🛠️ Tecnologías
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+| Tecnología | Versión |
+|------------|---------|
+| Laravel | 13.x |
+| PHP | 8.3+ |
+| PostgreSQL | 15+ |
+| Tailwind CSS | v4.0.0 |
+| DaisyUI | v5.7.47 |
+| Vite | Build tool |
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+## 📋 Requisitos previos
 
-## Agentic Development
+- PHP >= 8.3
+- Composer
+- Node.js & npm (o pnpm)
+- PostgreSQL
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## 🔧 Instalación
 
 ```bash
-composer require laravel/boost --dev
+# 1. Clonar el repositorio
+git clone <repository-url>
+cd ultra-tienda
 
-php artisan boost:install
+# 2. Instalar dependencias de PHP
+composer install
+
+# 3. Configurar entorno
+cp .env.example .env
+php artisan key:generate
+
+# 4. Configurar base de datos en .env
+# DB_CONNECTION=pgsql
+# DB_HOST=127.0.0.1
+# DB_PORT=5432
+# DB_DATABASE=UltraTienda
+# DB_USERNAME=postgres
+# DB_PASSWORD=3596
+
+# 5. Ejecutar migraciones
+php artisan migrate --force
+
+# 6. Instalar dependencias frontend
+npm install
+
+# 7. Compilar assets
+npm run build
+
+# 8. Iniciar servidor
+php artisan serve
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+El sistema estará disponible en `http://localhost:8000`
 
-## Contributing
+## 👤 Credenciales por defecto
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+- **Email**: `test@example.com`
+- **Password**: (no requiere contraseña - configurar según sea necesario)
 
-## Code of Conduct
+## 📡 Rutas principales
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Rutas públicas (guest)
+- `GET /login` - Formulario de inicio de sesión
+- `POST /login` - Autenticación
+- `GET /recuperar` - Recuperación de contraseña
+- Rutas de recursos: `/products`, `/categories`, `/orders` (parciales)
 
-## Security Vulnerabilities
+### Rutas autenticadas (auth middleware)
+- `GET /` - Panel de control
+- `GET /users` - Gestión de usuarios
+- `GET /products` - Catálogo de productos
+- `GET /categories` - Gestión de categorías
+- `GET /orders` - Órdenes de compra
+- `GET /roles` - Roles y permisos
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## 🗄️ Estructura de base de datos
 
-## License
+Tabla principal:
+- **users** - Usuarios con rol_id (FK → roles)
+- **categories** - Categorías (name UNIQUE, orden, is_active)
+- **products** - Productos (category_id FK, price, disponible, is_active)
+- **orders** - Órdenes (user_id FK, status, payment_method, payment_status)
+- **order_details** - Detalles de orden (product_id FK, quantity, price)
+- **order_payments** - Pagos de orden (amount, payment_method, payment_status)
+- **roles** - Roles del sistema (name UNIQUE)
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Relaciones clave:
+- User → Role (BelongsTo)
+- User → Orders (HasMany)
+- Category → Products (HasMany)
+- Order → OrderDetails (HasMany)
+- Order → Payments (HasMany)
+
+## 🛠️ Scripts disponibles
+
+| Script | Descripción |
+|--------|-------------|
+| `php artisan serve` | Servidor de desarrollo (puerto 8000) |
+| `npm run build` | Compilar assets de producción |
+| `npm run dev` | Modo desarrollo Vite |
+| `php artisan migrate` | Ejecutar migraciones |
+| `php artisan config:show app.name` | Ver configuración |
+
+## 🤝 Contribución
+
+1. Fork el repositorio
+2. Crea tu rama feature (`git checkout -b feature/nueva-funcionalidad`)
+3. Commit tus cambios (`git commit -m 'Añadir nueva funcionalidad'`)
+4. Push a la rama (`git push origin feature/nueva-funcionalidad`)
+5. Abre un Pull Request
+
+## 📄 Licencia
+
+Este proyecto está bajo la [Licencia MIT](https://opensource.org/licenses/MIT). Véase el archivo `LICENSE` para más detalles.
+
+## 📧 Contacto
+
+Para soporte o consultas, por favor abrir un issue en el repositorio o contactar al equipo de desarrollo.
