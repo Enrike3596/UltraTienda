@@ -199,7 +199,8 @@ class AuthController extends Controller
             ])->redirectTo(route('password.reset'));
         }
 
-        $user->forceFill(['password' => (string) $request->input('password')])->save();
+        $user->password = Hash::make($request->input('password'));
+$user->save();
 
         DB::table(config('auth.passwords.users.table'))->where('email', $email)->delete();
         $request->session()->forget('recovery_email');
