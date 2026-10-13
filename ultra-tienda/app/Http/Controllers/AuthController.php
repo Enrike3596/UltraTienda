@@ -125,13 +125,13 @@ class AuthController extends Controller
             $code = Str::padLeft((string) random_int(0, 999999), 6, '0');
 
             DB::table(config('auth.passwords.users.table'))->updateOrInsert(
-                ['email' => $user->getEmailForPasswordReset()],
+                ['email' => $user->email],
                 ['token' => Hash::make($code), 'created_at' => now()]
             );
 
             $user->notify(new RecoveryCodeNotification($code));
 
-            $request->session()->put('recovery_email', $user->getEmailForPasswordReset());
+            $request->session()->put('recovery_email', $user->email);
         } else {
             $request->session()->put('recovery_email', $data['email']);
         }
