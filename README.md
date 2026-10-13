@@ -51,7 +51,7 @@ php artisan key:generate
 # DB_PORT=5432
 # DB_DATABASE=UltraTienda
 # DB_USERNAME=postgres
-# DB_PASSWORD=3596
+# DB_PASSWORD=
 
 # 5. Ejecutar migraciones
 php artisan migrate --force
