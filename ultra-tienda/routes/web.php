@@ -24,7 +24,7 @@ Route::post('/logout', [AuthController::class, 'destroy'])->middleware('auth')->
 
 Route::middleware('auth')->group(function () {
     Route::get('/', function () {
-        return view('welcome');
+        return redirect()->route('products.index');
     });
 
     Route::resource('users', UserController::class);
