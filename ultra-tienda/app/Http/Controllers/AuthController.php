@@ -129,7 +129,12 @@ class AuthController extends Controller
                 ['token' => Hash::make($code), 'created_at' => now()]
             );
 
-            $user->notify(new RecoveryCodeNotification($code));
+            try {
+                $user->notify(new RecoveryCodeNotification($code));
+            } catch (\Exception $e) {
+                // Log error but continue - user will see message on next page
+                \Log::error('Recovery code notification failed: ' . $e->getMessage());
+            }
 
             $request->session()->put('recovery_email', $user->email);
         } else {
