@@ -1,27 +1,25 @@
 @if ($step === 1)
     {{-- Paso 1: solicitud del código --}}
-    <div class="mb-5 rounded-2xl bg-card p-5 text-center shadow-sm">
-        <div class="mx-auto mb-3 flex size-14 items-center justify-center rounded-2xl bg-secondary text-secondary-foreground">
-            <x-icon name="shield" size="size-7" />
-        </div>
-        <h2 class="text-lg font-semibold text-foreground">Recuperar acceso</h2>
-        <p class="mt-2 text-sm leading-relaxed text-muted-foreground">
+    <div class="mb-7 flex flex-col gap-2">
+        <span class="mb-2 flex size-11 items-center justify-center rounded-xl bg-primary-soft text-primary">
+            <x-icon name="shield" size="size-5" />
+        </span>
+        <h2 class="text-balance text-2xl font-bold tracking-tight text-foreground">Recuperar acceso</h2>
+        <p class="text-pretty text-sm leading-relaxed text-muted-foreground">
             Ingresa el correo electrónico registrado. Te enviaremos un código de seguridad de 6 dígitos
-            para restablecer tu contraseña (vigente 15 minutos).
+            para restablecer tu contraseña.
         </p>
     </div>
 
-    <form method="POST" action="{{ route('password.email') }}" class="space-y-4">
+    <form method="POST" action="{{ route('password.email') }}" class="flex flex-col gap-5" novalidate>
         @csrf
 
-        <div class="flex flex-col">
-            <label class="ut-label mb-1.5 px-1" for="recovery-email">
+        <div class="flex flex-col gap-2">
+            <label class="ut-label" for="recovery-email">
                 Correo electrónico registrado <span class="text-destructive">*</span>
             </label>
-            <div class="relative flex items-center">
-                <span class="pointer-events-none absolute left-4 text-muted-foreground">
-                    <x-icon name="mail" size="size-5" />
-                </span>
+            <div class="ut-field">
+                <span class="ut-field-icon"><x-icon name="mail" size="size-[18px]" /></span>
                 <input
                     type="email"
                     id="recovery-email"
@@ -31,92 +29,74 @@
                     autocomplete="email"
                     required
                     @class([
-                        'ut-input h-[52px] pl-11 pr-4 text-sm',
+                        'ut-input pl-11',
                         'ut-input-error' => $errors->has('email'),
                     ])
                 >
             </div>
             @error('email')
-                <p class="ut-error px-1">{{ $message }}</p>
+                <p class="ut-error">{{ $message }}</p>
             @enderror
-            <p class="mt-1.5 px-1 text-xs text-muted-foreground">
-                El código llegará al correo registrado (vigente 15 minutos).
-            </p>
+            <p class="ut-hint">El código tendrá una vigencia de 15 minutos.</p>
         </div>
 
         <button
             type="submit"
-            class="ut-auth-btn mt-2 flex h-[52px] w-full items-center justify-center gap-2 rounded-full text-sm font-semibold transition-transform active:scale-[0.98]"
+            class="ut-btn-primary mt-1"
         >
             <x-icon name="send" size="size-5" />
-            <span>Enviar código de recuperación</span>
+            <span>Enviar código</span>
         </button>
 
         <button
             type="button"
             data-auth-switch="login"
-            class="flex h-11 w-full items-center justify-center gap-2 rounded-full text-sm font-semibold text-primary transition-colors hover:bg-muted"
+            class="ut-btn-ghost"
         >
             <x-icon name="arrow-left" size="size-4" />
-            <span>Volver a Iniciar Sesión</span>
+            <span>Volver a iniciar sesión</span>
         </button>
     </form>
 @else
     {{-- Paso 2: código + nueva contraseña --}}
-    <div class="mb-5 rounded-2xl bg-card p-5 text-center shadow-sm">
-        <div class="mx-auto mb-3 flex size-14 items-center justify-center rounded-2xl bg-primary-soft text-primary">
-            <x-icon name="key" size="size-7" />
-        </div>
-        <h2 class="text-lg font-semibold text-foreground">Restablecer contraseña</h2>
-        <p class="mt-2 text-sm leading-relaxed text-muted-foreground">
+    <div class="mb-7 flex flex-col gap-2">
+        <span class="mb-2 flex size-11 items-center justify-center rounded-xl bg-primary-soft text-primary">
+            <x-icon name="key" size="size-5" />
+        </span>
+        <h2 class="text-balance text-2xl font-bold tracking-tight text-foreground">Restablecer contraseña</h2>
+        <p class="text-pretty text-sm leading-relaxed text-muted-foreground">
             Ingresa el código de 6 dígitos que enviamos a
             <span class="font-semibold text-foreground">{{ session('recovery_email') }}</span>
             y define tu nueva contraseña.
         </p>
     </div>
 
-    <form method="POST" action="{{ route('password.update') }}" class="space-y-4">
+    <form method="POST" action="{{ route('password.update') }}" class="flex flex-col gap-5" novalidate>
         @csrf
 
         {{-- Código de 6 dígitos --}}
-        <div class="flex flex-col">
-            <label class="ut-label mb-1.5 px-1" for="code">
-                Código de 6 dígitos <span class="text-destructive">*</span>
-            </label>
-            <div class="relative flex items-center">
-                <span class="pointer-events-none absolute left-4 text-muted-foreground">
-                    <x-icon name="map-pin" size="size-5" />
-                </span>
-                <input
-                    type="text"
-                    id="code"
-                    name="code"
-                    value="{{ old('code') }}"
-                    placeholder="000000"
-                    inputmode="numeric"
-                    maxlength="6"
-                    autocomplete="one-time-code"
-                    required
-                    @class([
-                        'ut-input h-[52px] pl-11 pr-4 text-center text-base tracking-[0.3em]',
-                        'ut-input-error' => $errors->has('code'),
-                    ])
-                >
+        <fieldset class="flex flex-col gap-2">
+            <legend class="ut-label mb-2">Código de verificación</legend>
+            @php($oldCode = str_split(str_pad((string) old('code'), 6)))
+            <div class="grid grid-cols-6 gap-2" data-otp="code">
+                @for ($i = 0; $i < 6; $i++)
+                    <input type="text" inputmode="numeric" maxlength="1" value="{{ trim($oldCode[$i] ?? '') }}"
+                        autocomplete="{{ $i === 0 ? 'one-time-code' : 'off' }}"
+                        aria-label="Dígito {{ $i + 1 }} de 6" class="ut-otp" data-otp-box>
+                @endfor
             </div>
+            <input type="hidden" id="code" name="code" value="{{ old('code') }}">
             @error('code')
-                <p class="ut-error px-1">{{ $message }}</p>
+                <p class="ut-error">{{ $message }}</p>
             @enderror
-        </div>
-
+        </fieldset>
         {{-- Nueva contraseña --}}
-        <div class="flex flex-col">
-            <label class="ut-label mb-1.5 px-1" for="recovery-password">
+        <div class="flex flex-col gap-2">
+            <label class="ut-label" for="recovery-password">
                 Nueva contraseña <span class="text-destructive">*</span>
             </label>
-            <div class="relative flex items-center">
-                <span class="pointer-events-none absolute left-4 text-muted-foreground">
-                    <x-icon name="key" size="size-5" />
-                </span>
+            <div class="ut-field">
+                <span class="ut-field-icon"><x-icon name="key" size="size-[18px]" /></span>
                 <input
                     type="password"
                     id="recovery-password"
@@ -125,13 +105,13 @@
                     autocomplete="new-password"
                     required
                     @class([
-                        'ut-input h-[52px] pl-11 pr-12 text-sm',
+                        'ut-input pl-11 pr-12',
                         'ut-input-error' => $errors->has('password'),
                     ])
                 >
                 <button
                     type="button"
-                    class="absolute right-3 flex items-center justify-center p-1.5 text-muted-foreground transition-colors hover:text-primary"
+                    class="absolute right-2 flex size-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
                     data-password-toggle="recovery-password"
                     aria-label="Mostrar u ocultar contraseña"
                 >
@@ -140,19 +120,17 @@
                 </button>
             </div>
             @error('password')
-                <p class="ut-error px-1">{{ $message }}</p>
+                <p class="ut-error">{{ $message }}</p>
             @enderror
         </div>
 
         {{-- Confirmar contraseña --}}
-        <div class="flex flex-col">
-            <label class="ut-label mb-1.5 px-1" for="recovery-password-confirmation">
+        <div class="flex flex-col gap-2">
+            <label class="ut-label" for="recovery-password-confirmation">
                 Confirmar nueva contraseña <span class="text-destructive">*</span>
             </label>
-            <div class="relative flex items-center">
-                <span class="pointer-events-none absolute left-4 text-muted-foreground">
-                    <x-icon name="key" size="size-5" />
-                </span>
+            <div class="ut-field">
+                <span class="ut-field-icon"><x-icon name="key" size="size-[18px]" /></span>
                 <input
                     type="password"
                     id="recovery-password-confirmation"
@@ -160,11 +138,11 @@
                     placeholder="Repite la nueva contraseña"
                     autocomplete="new-password"
                     required
-                    class="ut-input h-[52px] pl-11 pr-12 text-sm"
+                    class="ut-input pl-11 pr-12"
                 >
                 <button
                     type="button"
-                    class="absolute right-3 flex items-center justify-center p-1.5 text-muted-foreground transition-colors hover:text-primary"
+                    class="absolute right-2 flex size-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
                     data-password-toggle="recovery-password-confirmation"
                     aria-label="Mostrar u ocultar contraseña"
                 >
@@ -176,7 +154,7 @@
 
         <button
             type="submit"
-            class="ut-auth-btn mt-2 flex h-[52px] w-full items-center justify-center gap-2 rounded-full text-sm font-semibold transition-transform active:scale-[0.98]"
+            class="ut-btn-primary mt-1"
         >
             <x-icon name="rotate-ccw" size="size-5" />
             <span>Restablecer contraseña</span>
@@ -185,7 +163,7 @@
         <div class="flex flex-col gap-1">
             <a
                 href="{{ route('password.request') }}"
-                class="flex h-11 w-full items-center justify-center gap-2 rounded-full text-sm font-semibold text-primary transition-colors hover:bg-muted"
+                class="ut-btn-ghost"
             >
                 <x-icon name="mail" size="size-4" />
                 <span>Solicitar otro código</span>
@@ -193,10 +171,10 @@
             <button
                 type="button"
                 data-auth-switch="login"
-                class="flex h-11 w-full items-center justify-center gap-2 rounded-full text-sm font-semibold text-primary transition-colors hover:bg-muted"
+                class="ut-btn-ghost"
             >
                 <x-icon name="arrow-left" size="size-4" />
-                <span>Volver a Iniciar Sesión</span>
+                <span>Volver a iniciar sesión</span>
             </button>
         </div>
     </form>

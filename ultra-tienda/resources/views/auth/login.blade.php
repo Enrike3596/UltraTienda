@@ -1,10 +1,32 @@
 @extends('layout.guest')
 
-@section('title', 'Iniciar sesión · '.config('app.name', 'Ultra Tienda'))
+@section('title', 'Iniciar sesión · Ultra Tienda')
 
 @section('content')
+    <div class="ut-auth-shell">
+        <aside class="ut-auth-hero" aria-label="Información de Ultra Tienda">
+            <div class="ut-auth-hero-brand">
+                <span class="ut-auth-hero-logo"><x-icon name="shopping-bag" size="size-5" /></span>
+                <span>Ultra Tienda</span>
+            </div>
+            <div class="ut-auth-hero-art" aria-hidden="true">
+                <span class="ut-box ut-box-top"></span>
+                <span class="ut-box ut-box-middle"></span>
+                <span class="ut-box ut-box-bottom"></span>
+            </div>
+            <div class="ut-auth-hero-copy">
+                <span>Panel de administración</span>
+                <h2>Todo tu comercio,<br>gestionado desde<br>un solo lugar.</h2>
+                <p>Productos, pedidos, clientes e inventario con la información siempre al día.</p>
+            </div>
+            <div class="ut-auth-hero-security">
+                <x-icon name="shield" size="size-4" />
+                Conexión cifrada · Acceso exclusivo para personal autorizado
+            </div>
+        </aside>
+        <section class="ut-auth-content">
     {{-- Encabezado / Hero --}}
-    <div class="relative w-full overflow-hidden px-5 pt-4 pb-6 text-center">
+    <div class="ut-auth-mobile-header relative w-full overflow-hidden px-5 pt-4 pb-6 text-center">
         <div class="pointer-events-none absolute -top-12 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-primary-soft/50 blur-3xl"></div>
         <div class="pointer-events-none absolute top-10 right-4 h-28 w-28 rounded-full bg-secondary/60 blur-2xl"></div>
 
@@ -24,7 +46,7 @@
                 <x-icon name="shopping-bag" size="size-8" />
             </span>
             <div>
-                <h1 class="text-xl font-extrabold tracking-tight">{{ config('app.name', 'Ultra Tienda') }}</h1>
+                <h1 class="text-xl font-extrabold tracking-tight">Ultra Tienda</h1>
                 <p class="text-sm text-muted-foreground">Panel de administración · Acceso seguro</p>
             </div>
         </div>
@@ -32,22 +54,16 @@
 
     {{-- Contenedor principal --}}
     <div class="px-1">
-        {{-- Borde degradado del sistema (solo borde, sin hover) --}}
-        <div class="ut-auth-card-border">
-            <div class="ut-auth-card">
+        <div class="ut-auth-card">
                 {{-- Tabs Login / Recuperar --}}
-                <div class="mb-5 flex items-center justify-between gap-1 rounded-full bg-muted p-1 shadow-sm" role="tablist">
+                <div class="ut-tabs mb-5" role="tablist">
                     <button
                         type="button"
                         id="tab-login"
                         role="tab"
                         aria-selected="{{ $tab === 'login' ? 'true' : 'false' }}"
                         data-auth-tab="login"
-                        class="{{ \Illuminate\Support\Arr::toCssClasses([
-                            'flex flex-1 items-center justify-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold transition-all duration-300',
-                            'bg-card text-primary shadow-sm' => $tab === 'login',
-                            'text-muted-foreground hover:text-foreground' => $tab !== 'login',
-                        ]) }}"
+                        class="ut-tab"
                     >
                         <x-icon name="log-in" size="size-4" />
                         Iniciar Sesión
@@ -58,11 +74,7 @@
                         role="tab"
                         aria-selected="{{ $tab === 'recovery' ? 'true' : 'false' }}"
                         data-auth-tab="recovery"
-                        class="{{ \Illuminate\Support\Arr::toCssClasses([
-                            'flex flex-1 items-center justify-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold transition-all duration-300',
-                            'bg-card text-primary shadow-sm' => $tab === 'recovery',
-                            'text-muted-foreground hover:text-foreground' => $tab !== 'recovery',
-                        ]) }}"
+                        class="ut-tab"
                     >
                         <x-icon name="rotate-ccw" size="size-4" />
                         Recuperar Cuenta
@@ -74,18 +86,20 @@
 
                 {{-- VISTA 1: LOGIN --}}
                 <div id="view-login" class="{{ $tab === 'login' ? 'flex flex-col' : 'hidden' }}">
-                    <form id="form-login" method="POST" action="{{ route('login.attempt') }}" class="space-y-4">
+                    <div class="ut-auth-intro">
+                        <h1>Bienvenido de nuevo</h1>
+                        <p>Ingresa tus credenciales para acceder al panel de administración.</p>
+                    </div>
+                    <form id="form-login" method="POST" action="{{ route('login.attempt') }}" class="flex flex-col gap-5" novalidate>
                         @csrf
 
                         {{-- Campo 1: Correo --}}
-                        <div class="flex flex-col">
-                            <label class="ut-label mb-1.5 px-1" for="email">
+                        <div class="flex flex-col gap-2">
+                            <label class="ut-label" for="email">
                                 Correo electrónico <span class="text-destructive">*</span>
                             </label>
-                            <div class="relative flex items-center">
-                                <span class="pointer-events-none absolute left-4 text-muted-foreground">
-                                    <x-icon name="mail" size="size-5" />
-                                </span>
+                            <div class="ut-field">
+                                <span class="ut-field-icon"><x-icon name="mail" size="size-[18px]" /></span>
                                 <input
                                     type="email"
                                     id="email"
@@ -96,19 +110,19 @@
                                     required
                                     autofocus
                                     @class([
-                                        'ut-input h-[52px] pl-11 pr-4 text-sm',
+                                        'ut-input pl-11',
                                         'ut-input-error' => $errors->has('email'),
                                     ])
                                 >
                             </div>
                             @error('email')
-                                <p class="ut-error px-1">{{ $message }}</p>
+                                <p class="ut-error">{{ $message }}</p>
                             @enderror
                         </div>
 
                         {{-- Campo 2: Contraseña --}}
-                        <div class="flex flex-col">
-                            <div class="mb-1.5 flex items-center justify-between px-1">
+                        <div class="flex flex-col gap-2">
+                            <div class="flex items-center justify-between">
                                 <label class="ut-label" for="password">
                                     Contraseña <span class="text-destructive">*</span>
                                 </label>
@@ -120,10 +134,8 @@
                                     ¿Olvidaste tu contraseña?
                                 </button>
                             </div>
-                            <div class="relative flex items-center">
-                                <span class="pointer-events-none absolute left-4 text-muted-foreground">
-                                    <x-icon name="key" size="size-5" />
-                                </span>
+                            <div class="ut-field">
+                                <span class="ut-field-icon"><x-icon name="key" size="size-[18px]" /></span>
                                 <input
                                     type="password"
                                     id="password"
@@ -132,13 +144,13 @@
                                     autocomplete="current-password"
                                     required
                                     @class([
-                                        'ut-input h-[52px] pl-11 pr-12 text-sm',
+                                        'ut-input pl-11 pr-12',
                                         'ut-input-error' => $errors->has('password'),
                                     ])
                                 >
                                 <button
                                     type="button"
-                                    class="absolute right-3 flex items-center justify-center p-1.5 text-muted-foreground transition-colors hover:text-primary"
+                                    class="absolute right-2 flex size-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
                                     data-password-toggle="password"
                                     aria-label="Mostrar u ocultar contraseña"
                                 >
@@ -149,7 +161,7 @@
                         </div>
 
                         {{-- Recordar sesión --}}
-                        <div class="flex items-center justify-between px-1 pt-1">
+                        <div class="flex items-center justify-between pt-1">
                             <label class="flex cursor-pointer items-center gap-2.5 select-none" for="remember-me">
                                 <input
                                     type="checkbox"
@@ -166,7 +178,7 @@
                         {{-- CTA Login --}}
                         <button
                             type="submit"
-                            class="ut-auth-btn mt-3 flex h-[52px] w-full items-center justify-center gap-2 rounded-full text-sm font-semibold transition-transform active:scale-[0.98]"
+                            class="ut-btn-primary mt-1"
                         >
                             <span>Acceder al panel</span>
                             <x-icon name="arrow-right" size="size-5" />
@@ -177,7 +189,6 @@
                 {{-- VISTA 2: RECUPERACIÓN --}}
                 <div id="view-recovery" class="{{ $tab === 'recovery' ? 'flex flex-col' : 'hidden' }}">
                     @include('auth.recovery')
-                </div>
             </div>
         </div>
 
@@ -208,6 +219,8 @@
             </div>
         </div>
     </div>
+        </section>
+    </div>
 @endsection
 
 @push('scripts')
@@ -216,9 +229,6 @@
             var viewLogin = document.getElementById('view-login');
             var viewRecovery = document.getElementById('view-recovery');
             var tabButtons = document.querySelectorAll('[data-auth-tab]');
-
-            var activeClasses = ['bg-card', 'text-primary', 'shadow-sm'];
-            var inactiveClasses = ['text-muted-foreground', 'hover:text-foreground'];
 
             function setView(element, visible) {
                 element.classList.toggle('hidden', !visible);
@@ -229,16 +239,6 @@
             function setActiveTab(name) {
                 tabButtons.forEach(function (button) {
                     var isActive = button.getAttribute('data-auth-tab') === name;
-                    var targetClasses = isActive ? activeClasses : inactiveClasses;
-                    var otherClasses = isActive ? inactiveClasses : activeClasses;
-
-                    otherClasses.forEach(function (className) {
-                        button.classList.remove(className);
-                    });
-                    targetClasses.forEach(function (className) {
-                        button.classList.add(className);
-                    });
-
                     button.setAttribute('aria-selected', isActive ? 'true' : 'false');
                 });
             }
@@ -250,6 +250,12 @@
             }
 
             window.switchAuthView = switchAuthView;
+
+            tabButtons.forEach(function (button) {
+                button.addEventListener('click', function () {
+                    switchAuthView(button.getAttribute('data-auth-tab'));
+                });
+            });
 
             document.querySelectorAll('[data-auth-switch]').forEach(function (element) {
                 element.addEventListener('click', function () {
@@ -271,6 +277,49 @@
                     if (closedIcon) closedIcon.classList.toggle('hidden', !reveal);
                 });
             });
+
+            var otpBoxes = Array.from(document.querySelectorAll('[data-otp-box]'));
+            var otpValue = document.getElementById('code');
+
+            function syncOtp() {
+                if (otpValue) {
+                    otpValue.value = otpBoxes.map(function (box) {
+                        return box.value;
+                    }).join('');
+                }
+            }
+
+            otpBoxes.forEach(function (box, index) {
+                box.addEventListener('input', function () {
+                    box.value = box.value.replace(/\D/g, '').slice(-1);
+                    syncOtp();
+                    if (box.value && otpBoxes[index + 1]) otpBoxes[index + 1].focus();
+                });
+
+                box.addEventListener('keydown', function (event) {
+                    if (event.key === 'Backspace' && !box.value && otpBoxes[index - 1]) {
+                        otpBoxes[index - 1].focus();
+                    }
+                });
+
+                box.addEventListener('paste', function (event) {
+                    var pasted = (event.clipboardData || window.clipboardData).getData('text')
+                        .replace(/\D/g, '')
+                        .slice(0, otpBoxes.length);
+
+                    if (!pasted) return;
+
+                    event.preventDefault();
+                    pasted.split('').forEach(function (digit, digitIndex) {
+                        if (otpBoxes[index + digitIndex]) otpBoxes[index + digitIndex].value = digit;
+                    });
+                    syncOtp();
+                    var nextIndex = Math.min(index + pasted.length, otpBoxes.length - 1);
+                    otpBoxes[nextIndex].focus();
+                });
+            });
+
+            syncOtp();
         })();
     </script>
 @endpush

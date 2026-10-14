@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full bg-background">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
+        <meta name="theme-color" content="#061A40">
 
         <title>@yield('title', 'Acceso · '.config('app.name', 'Ultra Tienda'))</title>
 
@@ -24,9 +25,9 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
 
-    <body class="ut-auth-page">
-        <main class="flex min-h-dvh flex-col items-center justify-center px-4 py-8">
-            <div class="w-full max-w-md">
+    <body class="min-h-full bg-background font-sans text-foreground antialiased">
+        <main class="ut-auth-page min-h-dvh">
+            <div class="w-full">
                 @yield('content')
             </div>
         </main>
