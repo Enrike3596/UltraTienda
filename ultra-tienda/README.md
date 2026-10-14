@@ -117,7 +117,7 @@ Relaciones clave:
 |--------|-------------|
 | `php artisan serve` | Servidor de desarrollo (puerto 8000) |
 | `npm run build` | Compilar assets de producción |
-| `npm run dev` | Modo desarrollo Vite |
+| `npm run dev` | Modo desarrollo Vite (ejecutar junto a `php artisan serve`; limpia `public/hot` al detenerse) |
 | `php artisan migrate` | Ejecutar migraciones |
 | `php artisan config:show app.name` | Ver configuración |
 
