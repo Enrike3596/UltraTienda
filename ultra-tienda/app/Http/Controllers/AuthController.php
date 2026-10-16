@@ -58,7 +58,17 @@ class AuthController extends Controller
                 ->withInput($request->only('email'));
         }
 
-        if (! Auth::attempt($validator->validated(), $request->boolean('remember'))) {
+        try {
+            $authenticated = Auth::attempt($validator->validated(), $request->boolean('remember'));
+        } catch (\RuntimeException $e) {
+            // Hash de password inválido en BD (ej. $2a$ en vez de $2y$): no debe ser un 500.
+            \Log::warning('Login con hash inválido: '.$e->getMessage(), [
+                'email' => $validator->validated()['email'] ?? null,
+            ]);
+            $authenticated = false;
+        }
+
+        if (! $authenticated) {
             return redirect()
                 ->route('login')
                 ->withErrors(['email' => 'El correo o la contraseña son incorrectos.'])
