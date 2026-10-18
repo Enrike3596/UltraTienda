@@ -1,7 +1,0 @@
-$kind: http-request
-url: "{{baseUrl}}/api/roles"
-method: GET
-body:
-  type: json
-  content: '{"name": "cajero_test"}'
-order: 2000
