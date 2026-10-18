@@ -47,6 +47,8 @@ class RoleController extends Controller
      */
     public function show(Role $role)
     {
+        $role->load(['users:id,name,email,created_at,role_id'])->loadCount('users');
+
         return view('roles.show', compact('role'));
     }
 

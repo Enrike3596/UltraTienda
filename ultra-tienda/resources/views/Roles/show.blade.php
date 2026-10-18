@@ -33,14 +33,14 @@
                     </div>
                 </div>
 
-                <x-badge tone="info">{{ $role->users()->count() }} {{ Str::plural('usuario', $role->users()->count()) }}</x-badge>
+                <x-badge tone="info">{{ $role->users_count }} {{ Str::plural('usuario', $role->users_count) }}</x-badge>
             </div>
 
             <div class="ut-card-body">
                 <dl class="grid gap-5 sm:grid-cols-3">
                     <div>
                         <dt class="ut-hint">Usuarios con este rol</dt>
-                        <dd class="font-mono font-semibold">{{ $role->users()->count() }}</dd>
+                        <dd class="font-mono font-semibold">{{ $role->users_count }}</dd>
                     </div>
                     <div>
                         <dt class="ut-hint">Creado</dt>

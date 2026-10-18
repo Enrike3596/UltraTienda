@@ -28,8 +28,8 @@ class OrderDetailController extends Controller
     public function create()
     {
         return view('order-details.create', [
-            'orders' => Order::orderByDesc('id')->get(),
-            'products' => Product::orderBy('name')->get(),
+            'orders' => Order::select('id', 'customer_name')->orderByDesc('id')->get(),
+            'products' => Product::select('id', 'name')->orderBy('name')->get(),
         ]);
     }
 
@@ -67,8 +67,8 @@ class OrderDetailController extends Controller
     {
         return view('order-details.edit', [
             'orderDetail' => $orderDetail,
-            'orders' => Order::orderByDesc('id')->get(),
-            'products' => Product::orderBy('name')->get(),
+            'orders' => Order::select('id', 'customer_name')->orderByDesc('id')->get(),
+            'products' => Product::select('id', 'name')->orderBy('name')->get(),
         ]);
     }
 

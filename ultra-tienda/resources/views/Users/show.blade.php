@@ -47,7 +47,7 @@
                 </div>
                 <div>
                     <dt class="ut-hint">Pedidos</dt>
-                    <dd class="font-mono font-semibold">{{ $user->orders()->count() }}</dd>
+                    <dd class="font-mono font-semibold">{{ $user->orders_count }}</dd>
                 </div>
                 <div>
                     <dt class="ut-hint">Registrado</dt>

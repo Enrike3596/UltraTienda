@@ -27,7 +27,7 @@ class OrderPaymentController extends Controller
     public function create()
     {
         return view('order-payments.create', [
-            'orders' => Order::orderByDesc('id')->get(),
+            'orders' => Order::select('id', 'customer_name')->orderByDesc('id')->get(),
         ]);
     }
 
@@ -66,7 +66,7 @@ class OrderPaymentController extends Controller
     {
         return view('order-payments.edit', [
             'orderPayment' => $orderPayment,
-            'orders' => Order::orderByDesc('id')->get(),
+            'orders' => Order::select('id', 'customer_name')->orderByDesc('id')->get(),
         ]);
     }
 
