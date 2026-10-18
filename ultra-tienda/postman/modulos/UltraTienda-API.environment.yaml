@@ -1,0 +1,7 @@
+name: UltraTienda-API
+values:
+  - key: baseUrl
+    value: 'http://127.0.0.1:8000'
+  - key: token
+    value: ''
+color: 0

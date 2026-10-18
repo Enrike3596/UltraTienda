@@ -1,0 +1,22 @@
+$kind: http-request
+url: "{{baseUrl}}/api/products/1"
+method: PUT
+headers:
+  Content-Type: application/json
+  Accept: application/json
+body:
+  type: json
+  content: |-
+    {
+      "category_id": 1,
+      "name": "Parlante Bluetooth Test Edit",
+      "description": "Descripcion actualizada",
+      "price": 109900,
+      "disponible": true,
+      "is_active": true
+    }
+auth:
+  type: bearer
+  credentials:
+    token: "{{token}}"
+order: 4000

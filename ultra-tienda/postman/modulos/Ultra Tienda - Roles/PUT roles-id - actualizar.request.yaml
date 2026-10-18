@@ -1,0 +1,17 @@
+$kind: http-request
+url: "{{baseUrl}}/api/roles/1"
+method: PUT
+headers:
+  Content-Type: application/json
+  Accept: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "cajero_actualizado"
+    }
+auth:
+  type: bearer
+  credentials:
+    token: "{{token}}"
+order: 4000

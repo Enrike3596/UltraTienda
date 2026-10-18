@@ -1,0 +1,23 @@
+$kind: http-request
+url: "{{baseUrl}}/api/products"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+body:
+  type: json
+  content: |-
+    {
+      "category_id": 1,
+      "name": "Parlante Bluetooth Test",
+      "description": "Producto de prueba desde Postman",
+      "price": 99900,
+      "image": null,
+      "disponible": true,
+      "is_active": true
+    }
+auth:
+  type: bearer
+  credentials:
+    token: "{{token}}"
+order: 2000

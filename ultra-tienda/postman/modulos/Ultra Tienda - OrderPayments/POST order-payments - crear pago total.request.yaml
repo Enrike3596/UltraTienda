@@ -1,0 +1,21 @@
+$kind: http-request
+url: "{{baseUrl}}/api/order-payments"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+body:
+  type: json
+  content: |-
+    {
+      "order_id": 2,
+      "amount": 271900,
+      "payment_method": "efectivo",
+      "payment_status": "paid",
+      "payment_date": "2026-10-03 09:45:00"
+    }
+auth:
+  type: bearer
+  credentials:
+    token: "{{token}}"
+order: 3000

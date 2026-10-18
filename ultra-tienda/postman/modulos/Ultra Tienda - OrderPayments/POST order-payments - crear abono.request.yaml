@@ -1,0 +1,21 @@
+$kind: http-request
+url: "{{baseUrl}}/api/order-payments"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+body:
+  type: json
+  content: |-
+    {
+      "order_id": 1,
+      "amount": 50000,
+      "payment_method": "transferencia",
+      "payment_status": "pending",
+      "payment_date": null
+    }
+auth:
+  type: bearer
+  credentials:
+    token: "{{token}}"
+order: 2000

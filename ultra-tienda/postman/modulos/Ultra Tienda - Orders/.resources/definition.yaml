@@ -1,0 +1,17 @@
+$kind: collection
+description: |-
+  customer_name, phone, address y total requeridos; user_id nullable pero debe existir.
+  CÓMO USAR ESTA COLECCIÓN (importar en Postman: Import > File, o arrastrar el archivo):
+  1. Importa UNA sola vez el entorno postman/UltraTienda-API.postman_environment.json y selecciónalo arriba a la derecha.
+  2. Si es la primera vez, ejecuta la colección 01-auth: POST "POST login - obtener token" guarda el token en {{token}}.
+  3. Con el token activo, importa y ejecuta los demás módulos (02 a 08).
+  baseUrl = http://127.0.0.1:8000 (cámbialo si el servidor corre en otro puerto).
+variables:
+  baseUrl: http://127.0.0.1:8000
+  token: ""
+auth:
+  - id: 69830781-fd80-4c84-98d8-3c32c2396cb5
+    type: bearer
+    name: bearer auth
+    credentials:
+      token: "{{token}}"

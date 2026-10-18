@@ -1,0 +1,20 @@
+$kind: http-request
+url: "{{baseUrl}}/api/users/2"
+method: PUT
+headers:
+  Content-Type: application/json
+  Accept: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "Prueba Postman Edit",
+      "email": "prueba.postman@ultratienda.com",
+      "password": "NuevaClave123",
+      "role_id": 4
+    }
+auth:
+  type: bearer
+  credentials:
+    token: "{{token}}"
+order: 5000

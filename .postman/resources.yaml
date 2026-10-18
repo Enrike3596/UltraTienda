@@ -1,0 +1,17 @@
+# Use this workspace to collaborate
+workspace:
+  id: 4338b40e-0621-40cd-8955-1f4f3a6cec83
+
+localResources:
+  collections:
+    - ../ultra-tienda/postman/modulos/Ultra Tienda - Auth
+    - ../ultra-tienda/postman/modulos/Ultra Tienda - Roles
+    - ../ultra-tienda/postman/modulos/Ultra Tienda - Categories
+    - ../ultra-tienda/postman/modulos/Ultra Tienda - Products
+    - ../ultra-tienda/postman/modulos/Ultra Tienda - Users
+    - ../ultra-tienda/postman/modulos/Ultra Tienda - Orders
+    - ../ultra-tienda/postman/modulos/Ultra Tienda - OrderDetails
+    - ../ultra-tienda/postman/modulos/Ultra Tienda - OrderPayments
+  environments:
+    - ../ultra-tienda/postman/modulos/UltraTienda-API.postman_environment.json
+    - ../ultra-tienda/postman/modulos/UltraTienda-API.environment.yaml

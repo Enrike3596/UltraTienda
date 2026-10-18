@@ -1,0 +1,20 @@
+$kind: http-request
+url: "{{baseUrl}}/api/users"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "Prueba Postman",
+      "email": "prueba.postman@ultratienda.com",
+      "password": "Secreta123",
+      "role_id": 4
+    }
+auth:
+  type: bearer
+  credentials:
+    token: "{{token}}"
+order: 2000

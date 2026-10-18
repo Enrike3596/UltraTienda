@@ -1,0 +1,27 @@
+$kind: http-request
+url: "{{baseUrl}}/api/orders/1"
+method: PUT
+headers:
+  Content-Type: application/json
+  Accept: application/json
+body:
+  type: json
+  content: |-
+    {
+      "user_id": 4,
+      "customer_name": "Laura Perez Edit",
+      "customer_email": "laura.cliente@ultratienda.com",
+      "customer_phone": "3001112222",
+      "customer_address": "Calle 10 # 25-30, Apto 301",
+      "subtotal": 149900,
+      "shipping_cost": 12000,
+      "total": 161900,
+      "status": "paid",
+      "payment_method": "efectivo",
+      "payment_status": "paid"
+    }
+auth:
+  type: bearer
+  credentials:
+    token: "{{token}}"
+order: 4000

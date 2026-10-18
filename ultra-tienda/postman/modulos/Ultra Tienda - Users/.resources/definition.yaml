@@ -1,0 +1,17 @@
+$kind: collection
+description: |-
+  email unico; password min 8 requerido al crear, omitelo al actualizar si no cambia; role_id debe existir.
+  CÓMO USAR ESTA COLECCIÓN (importar en Postman: Import > File, o arrastrar el archivo):
+  1. Importa UNA sola vez el entorno postman/UltraTienda-API.postman_environment.json y selecciónalo arriba a la derecha.
+  2. Si es la primera vez, ejecuta la colección 01-auth: POST "POST login - obtener token" guarda el token en {{token}}.
+  3. Con el token activo, importa y ejecuta los demás módulos (02 a 08).
+  baseUrl = http://127.0.0.1:8000 (cámbialo si el servidor corre en otro puerto).
+variables:
+  baseUrl: http://127.0.0.1:8000
+  token: ""
+auth:
+  - id: c79fa7df-0ec4-4490-88d3-a95e9e33c68c
+    type: bearer
+    name: bearer auth
+    credentials:
+      token: "{{token}}"

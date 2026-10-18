@@ -1,0 +1,20 @@
+$kind: http-request
+url: "{{baseUrl}}/api/categories/1"
+method: PUT
+headers:
+  Content-Type: application/json
+  Accept: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "Juguetes Test Edit",
+      "description": "Descripcion actualizada",
+      "orden": 7,
+      "is_active": true
+    }
+auth:
+  type: bearer
+  credentials:
+    token: "{{token}}"
+order: 4000
