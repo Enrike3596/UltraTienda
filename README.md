@@ -1,5 +1,7 @@
 # UltraTienda - Sistema de E-commerce
 
+> La documentación técnica y de arquitectura se mantiene en el [manual del sistema](./SYSTEM_MANUAL_ROOT.md).
+
 ## Descripción general
 
 **UltraTienda** es un sistema completo de comercio electrónico construido con Laravel, diseñado para gestionar catálogos de productos, órdenes de compra, pagos y control de usuarios con roles diferenciados. Proporciona una interfaz administrativa completa optimizada para la venta en línea.
@@ -19,7 +21,8 @@
 |------------|---------|
 | Laravel | 13.x |
 | PHP | 8.3+ |
-| PostgreSQL | 15+ |
+| SQLite | Desarrollo local |
+| PostgreSQL | 15+ (alternativa para producción) |
 | Tailwind CSS | v4.0.0 |
 | DaisyUI | v5.7.47 |
 | Vite | Build tool |
@@ -29,14 +32,14 @@
 - PHP >= 8.3
 - Composer
 - Node.js & npm (o pnpm)
-- PostgreSQL
+- SQLite (incluido para desarrollo) o PostgreSQL
 
 ## 🔧 Instalación
 
 ```bash
 # 1. Clonar el repositorio
 git clone https://github.com/Enrike3596/UltraTienda.git
-cd UltraTienda
+cd UltraTienda\ultra-tienda
 
 # 2. Instalar dependencias de PHP
 composer install
@@ -45,7 +48,9 @@ composer install
 cp .env.example .env
 php artisan key:generate
 
-# 4. Configurar base de datos en .env
+# 4. Configurar base de datos en .env (SQLite es el valor predeterminado)
+# DB_CONNECTION=sqlite
+# Para PostgreSQL:
 # DB_CONNECTION=pgsql
 # DB_HOST=127.0.0.1
 # DB_PORT=5432
@@ -75,11 +80,10 @@ El sistema estará disponible en `http://localhost:8000`
 
 ## 📡 Rutas principales
 
-### Rutas públicas (guest)
+### Rutas web públicas (guest)
 - `GET /login` - Formulario de inicio de sesión
 - `POST /login` - Autenticación
 - `GET /recuperar` - Recuperación de contraseña
-- Rutas de recursos: `/products`, `/categories`, `/orders`
 
 ### Rutas autenticadas (auth middleware)
 - `GET /` - Panel de control
@@ -88,6 +92,12 @@ El sistema estará disponible en `http://localhost:8000`
 - `GET /categories` - Gestión de categorías
 - `GET /orders` - Órdenes de compra
 - `GET /roles` - Roles y permisos
+
+### API
+
+- `POST /api/login` - Autenticación y token de Sanctum
+- `POST /api/logout` y `GET /api/me` - Sesión API autenticada
+- Recursos protegidos: `/api/roles`, `/api/categories`, `/api/products`, `/api/users`, `/api/orders`, `/api/order-details`, `/api/order-payments`
 
 ## 🗄️ Estructura de base de datos
 

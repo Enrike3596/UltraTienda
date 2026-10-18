@@ -2,7 +2,7 @@
 
 ## 1. Introducción
 
-Este manual describe la arquitectura, patrones y estructura del sistema **UltraTienda**, una aplicación de comercio electrónico construida con Laravel 13.x. El objetivo es proporcionar una guía completa para desarrolladores, equipos de mantenimiento y partes interesadas sobre cómo está diseñado el sistema, cómo interactúan sus componentes y cómo extenderlo o mantenerlo en el futuro.
+Este manual describe la arquitectura, patrones y estructura del sistema **UltraTienda**, una aplicación de comercio electrónico construida con Laravel 13.x. El objetivo es proporcionar una guía completa para desarrolladores, equipos de mantenimiento y partes interesadas sobre cómo está diseñado el sistema, cómo interactúan sus componentes y cómo extenderlo o mantenerlo en el futuro. La fuente canónica de este documento es este archivo en la raíz del repositorio.
 
 ---
 
@@ -16,21 +16,21 @@ UltraTienda sigue la arquitectura **MVC (Model-View-Controller)** clásica de La
 
 ### Patrones Implementados
 
-1. **Pattern Resourceful Routing**: Laravel proporciona rutas de recursos RESTful que mapean operaciones CRUD (Create, Read, Update, Delete) a controladores de forma convencional.
+1. **Resourceful Routing**: Laravel proporciona rutas de recursos RESTful que mapean operaciones CRUD (Create, Read, Update, Delete) a controladores de forma convencional.
 
-2. **Repository Pattern (implícito)**: Los modelos actúan como repositorios, encapsulando el acceso a datos y separando la lógica de negocio de los controladores.
+2. **Eloquent ORM**: Los modelos encapsulan el acceso a datos y declaran las relaciones entre entidades mediante `belongsTo` y `hasMany`.
 
-3. **Service Layer (partial)**: Algunas lógicas complejas podrían extraerse a servicios, pero el sistema mantiene la lógica principal en controladores y modelos por simplicidad.
+3. **Controladores orientados a recursos**: Los controladores coordinan validación, persistencia y respuestas HTML o JSON para cada recurso.
 
-4. **Middleware Pattern**: Laravel uses middleware para filtrar peticiones entrantes (autenticación, CORS, rate limiting).
+4. **Middleware Pattern**: El sistema usa middleware para filtrar peticiones entrantes, proteger sesiones y aplicar rate limiting a autenticación.
 
-5. **Repository-Controller Pattern**: Los controladores no contienen lógica de negocio compleja, delegando a los modelos para operaciones de base de datos.
+5. **Sanctum para API**: Las rutas API protegidas usan `auth:sanctum`, mientras que las rutas web usan sesiones y el middleware `auth`.
 
 ---
 
 ## 3. Interacciones entre Tablas (Relaciones E-R)
 
-El sistema utiliza una base de datos relacional (PostgreSQL) con las siguientes tablas principales y sus relaciones:
+El sistema utiliza una base de datos relacional. La configuración de ejemplo usa SQLite para desarrollo local; PostgreSQL 15+ es una alternativa soportada para otros entornos. Las tablas principales y sus relaciones son:
 
 ### Diagrama de Relaciones Entidad-Relación (E-R)
 
@@ -197,8 +197,8 @@ class Category extends Model
 Estos modelos gestionan el ciclo de vida de una transacción de venta:
 
 - **Order**: Representa una orden de compra completa. Tiene relaciones con User (quién creó la orden), OrderDetails (productos en la orden) y OrderPayments (pagos asociados).
-- **OrderDetail**: Línea de detalle de una orden. Contiene la relación Many-to-One con ambos Order y Product. Cuando se elimina una orden, sus detalles se eliminan en cascada (`cascadeOnDelete`).
-- **OrderPayment**: Registro de pagos asociados a una orden. También utiliza eliminación en cascada.
+- **OrderDetail**: Línea de detalle de una orden. Contiene la relación Many-to-One con ambos Order y Product. Cuando se elimina una orden, sus detalles se eliminan en cascada (`cascadeOnDelete`); un producto relacionado no se elimina si tiene detalles (`restrictOnDelete`).
+- **OrderPayment**: Registro de pagos asociados a una orden. También utiliza eliminación en cascada al eliminar la orden.
 
 ### 4.2 Estructura de Controladores (`app/Http/Controllers/`)
 
@@ -250,6 +250,14 @@ Maneja autenticación y recuperación de contraseña:
 - `recoveryForm` / `sendRecoveryCode`: Recuperación vía email
 - `resetForm` / `resetPassword`: Restablecimiento de contraseña
 
+#### Controladores API
+
+La carpeta `app/Http/Controllers/Api/` contiene controladores JSON equivalentes para autenticación, usuarios, roles, categorías, productos, órdenes, detalles y pagos. Las rutas se registran en `routes/api.php`:
+
+- `POST /api/login`: obtiene un token de Sanctum.
+- `POST /api/logout` y `GET /api/me`: requieren `auth:sanctum`.
+- `/api/roles`, `/api/categories`, `/api/products`, `/api/users`, `/api/orders`, `/api/order-details` y `/api/order-payments`: recursos protegidos con `apiResource`.
+
 ### 4.3 Acoplamiento Model-Controller
 
 El nivel de acoplamiento en este sistema es **bajo desacoplamiento (low coupling)**:
@@ -257,7 +265,7 @@ El nivel de acoplamiento en este sistema es **bajo desacoplamiento (low coupling
 - Los controladores dependen de las interfaces de los modelos (métodos definidos en las clases)
 - Los modelos no tienen conocimiento de los controladores (dependencia unidireccional)
 - Se utilizan relaciones Eloquent (`hasMany`, `belongsTo`) en lugar de consultas SQL directas
-- Los controladores solo pasan datos a las vistas; la lógica de negocio reside en los modelos
+- Los controladores coordinan validación, modelos y respuestas; los modelos encapsulan persistencia y relaciones
 
 **Ejemplo de flujo**:
 
@@ -270,7 +278,7 @@ Controlador (ej. OrderController@store)
         ↓
 Método del Modelo (ej. $order->save(), $order->details()->create())
         ↓
-Base de datos (PostgreSQL)
+Base de datos configurada
         ↓
 Respuesta / Vistas
 ```
@@ -286,7 +294,7 @@ El backend de UltraTienda está construido completamente con Laravel y cumple la
 - **Enrutamiento de rutas**: `routes/web.php` define todas las rutas públicas y protegidas
 - **Controladores**: Procesan la lógica, validan entradas, interactúan con modelos
 - **Autenticación y Autorización**: middleware `auth` protege rutas sensibles
-- **API RESTful**: Las rutas de recursos siguen convenciones REST
+- **API RESTful**: `routes/api.php` expone recursos JSON protegidos con Laravel Sanctum
 - **Gestor de vistas**: Motor Blade renderiza plantillas HTML
 
 ### 5.2 Arquitectura Frontend
@@ -305,12 +313,12 @@ Las vistas son archivos `.blade.php` que contienen HTML con directivas de Blade:
 resources/views/
 ├── layout/           # Plantillas maestras (app.blade.php, sidebar, topbar)
 ├── auth/             # Vistas de login y recuperación
-├── users/            # CRUD de usuarios
-├── categories/       # CRUD de categorías
-├── products/         # CRUD de productos
-├── orders/           # CRUD de órdenes
-├── order-details/    # Detalles de órdenes
-├── order-payments/   # Pagos de órdenes
+├── Users/            # CRUD de usuarios
+├── Categories/       # CRUD de categorías
+├── Products/         # CRUD de productos
+├── Orders/           # CRUD de órdenes
+├── Order-Details/    # Detalles de órdenes
+├── Order-payments/   # Pagos de órdenes
 └── components/       # Componentes reutilizables (icon, badge, avatar, money, page-header)
 ```
 
@@ -329,11 +337,11 @@ Método Eloquent (Product::with('category')->get())
         ↓
 Datos JSON/Collection
         ↓
-Vista Blade (resources/views/products/index.blade.php)
+Vista Blade (resources/views/Products/index.blade.php)
         ↓
 Motor Blade renderiza HTML
         ↓
-Tailwind CSS estilo las elementos
+Tailwind CSS aplica los estilos
         ↓
 Respuesta al navegador
 ```
@@ -361,8 +369,6 @@ ultra-tienda/
 ├── composer.lock     # Bloqueo de versiones
 ├── package.json      # Dependencias Node.js
 ├── vite.config.js    # Configuración de Vite
-├── README.md         # Documentación del proyecto
-├── AGAENTS.md        # Reglas y directrices
 ├── AGENTS.md         # Configuración de agentes
 ├── database/
 │   ├── migrations/   # Archivos de migración SQL
@@ -377,7 +383,8 @@ ultra-tienda/
 │   ├── js/           # JavaScript de cliente
 │   └── css/          # Estilos
 ├── routes/
-│   └── web.php       # Definición de rutas
+│   ├── web.php       # Definición de rutas web
+│   └── api.php       # Definición de rutas API
 ├── config/           # Configuración Laravel
 ├── storage/          # Archivos generados, logs, uploads
 └── public/           # Punto de entrada web
@@ -394,8 +401,9 @@ ultra-tienda/
 | `database/migrations/` | Evolución estructural de BD | Archivos PHP que crean/alteran tablas |
 | `database/seeders/` | Datos iniciales de prueba | Factory calls, datos de demostración |
 | `resources/views/` | Capa de presentación | Archivos `.blade.php` para cada recurso |
-| `resources/js/` | Lógica del lado del cliente | Componentes Vue/React o JS puro con Alpine.js |
-| `routes/web.php` | Definición de enrutamiento | Rutas grupadas por middleware, recursos |
+| `resources/js/` | Lógica del lado del cliente | JavaScript de la interfaz |
+| `routes/web.php` | Definición de enrutamiento web | Rutas agrupadas por `guest` y `auth` |
+| `routes/api.php` | Definición de API | Rutas JSON agrupadas por `auth:sanctum` |
 | `config/` | Configuración de la aplicación | archivos PHP: auth.php, database.php, mail.php, etc. |
 | `storage/` | Almacenamiento de archivos | Logs, caches, archivos subidos (imágenes) |
 | `public/` | Entrada pública | `index.php` que bootstrapea Laravel, assets compilados |
@@ -411,7 +419,7 @@ ultra-tienda/
 5. Middleware `web` se aplica (sesión, cookies)
 6. Si ruta requiere auth, middleware `auth` verifica usuario
 7. Controlador correspondiente se ejecuta
-8. Modelo interactúa con PostgreSQL vía Eloquent
+8. Modelo interactúa con la base de datos configurada vía Eloquent
 9. Resultados retornan al controlador
 10. Vista Blade se renderiza con datos
 11. Tailwind CSS estiliza componentes
@@ -444,7 +452,7 @@ ultra-tienda/
 ### 7.3 Validación de Datos
 
 - Validación en controladores usando reglas de validación de Laravel
-- Algunos campos tienen validación en el modelo (`$casts`)
+- Conversión de tipos y formatos mediante el método `casts()` de los modelos
 - Validación en las vistas mediante errores `$errors`
 
 ### 7.4 Manejo de Errores
@@ -501,8 +509,9 @@ ultra-tienda/
 
 ### 9.2 Base de Datos
 
-- PostgreSQL 15+ recomendado
-- Backups periódicos de la base de datos `UltraTienda`
+- SQLite es la configuración predeterminada de `.env.example`
+- PostgreSQL 15+ es una alternativa recomendada para producción
+- Backups periódicos de la base de datos configurada
 - Migraciones versionadas en control de fuentes
 
 ### 9.3 Frontend
@@ -527,6 +536,6 @@ El sistema **UltraTienda** implementa una arquitectura Laravel MVC robusta y esc
 El uso de Blade templates con Tailwind CSS/DaisyUI permite una interfaz de usuario moderna y responsiva, mientras que Eloquent ORM abstrae la complejidad de las consultas SQL. Este manual sirve como base para el onboarding de nuevos desarrolladores, mantenimiento continuo y futura expansión de funcionalidades.
 
 ---
-*Documento generado el: 12 de octubre de 2026*
-*Versión: 1.0*
-*Sistema: UltraTienda - Laravel 13.x - PostgreSQL*
+*Documento actualizado el: 18 de octubre de 2026*
+*Versión: 1.1*
+*Sistema: UltraTienda - Laravel 13.x - SQLite (desarrollo) / PostgreSQL (alternativa)*
