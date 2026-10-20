@@ -16,7 +16,7 @@ return [
         [
             'title' => 'General',
             'items' => [
-                ['label' => 'Dashboard', 'icon' => 'layout-dashboard', 'url' => '/'],
+                ['label' => 'Dashboard', 'icon' => 'layout-dashboard', 'route' => 'dashboard'],
             ],
         ],
         [

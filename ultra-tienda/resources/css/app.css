@@ -1213,6 +1213,245 @@ html.dark .ut-theme-moon {
     margin-top: 0;
 }
 
+/* ------------------------------- Dashboard ------------------------------- */
+.ut-stat-card {
+    position: relative;
+    transition:
+        transform 0.18s ease,
+        box-shadow 0.18s ease;
+}
+
+/* Franja de acento con el degradado del sistema (misma gama que el login) */
+.ut-stat-card::before {
+    position: absolute;
+    inset-inline: 0;
+    inset-block-start: 0;
+    block-size: 3px;
+    background-image: linear-gradient(90deg, var(--primary), #0353a4);
+    content: '';
+}
+
+.ut-stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 28px -16px rgb(6 26 64 / 0.35);
+}
+
+.ut-stat-icon {
+    display: flex;
+    inline-size: 2.75rem;
+    block-size: 2.75rem;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.75rem;
+}
+
+.ut-stat-icon-primary {
+    background: var(--primary-soft);
+    color: var(--primary);
+}
+
+.ut-stat-icon-info {
+    background: var(--secondary);
+    color: var(--secondary-foreground);
+}
+
+.ut-stat-icon-accent {
+    background: var(--accent);
+    color: var(--accent-foreground);
+}
+
+.ut-stat-icon-neutral {
+    background: var(--muted);
+    color: var(--muted-foreground);
+}
+
+.ut-stat-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+}
+
+.ut-stat-value {
+    margin-top: 0.25rem;
+    font-size: 1.75rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--card-foreground);
+}
+
+.ut-stat-hint {
+    margin-top: 0.375rem;
+    font-size: 0.75rem;
+    color: var(--muted-foreground);
+}
+
+/* Indicador de variación frente al periodo anterior */
+.ut-trend {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.125rem;
+    border-radius: 9999px;
+    padding: 0.125rem 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.ut-trend-up {
+    background: rgb(16 185 129 / 0.14);
+    color: #047857;
+}
+
+.dark .ut-trend-up {
+    color: #34d399;
+}
+
+.ut-trend-down {
+    background: color-mix(in srgb, var(--destructive) 14%, transparent);
+    color: var(--destructive);
+}
+
+/* Gráfico de barras diario (CSS puro, sin dependencias) */
+.ut-chart {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+    align-items: end;
+    gap: 0.75rem;
+}
+
+.ut-chart-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.ut-chart-track {
+    display: flex;
+    inline-size: 100%;
+    block-size: 11rem;
+    align-items: flex-end;
+    border-radius: 0.75rem;
+    background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--primary) 8%, transparent));
+    padding: 0.375rem;
+}
+
+.ut-chart-bar {
+    display: block;
+    inline-size: 100%;
+    min-block-size: 6px;
+    border-radius: 0.5rem;
+    background-image: linear-gradient(180deg, #2f86d6, var(--primary));
+    box-shadow: 0 6px 12px -8px color-mix(in srgb, var(--primary) 70%, transparent);
+    transition: filter 0.2s ease;
+}
+
+.ut-chart-col:hover .ut-chart-bar {
+    filter: brightness(1.12) saturate(1.05);
+}
+
+.ut-chart-label {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+}
+
+/* Fila de actividad (lista de últimos pedidos) */
+.ut-feed-item {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    padding: 0.875rem 1.25rem;
+    transition: background-color 0.15s ease;
+}
+
+.ut-feed-item:hover {
+    background: color-mix(in srgb, var(--muted) 60%, transparent);
+}
+
+/* Posición del ranking de productos */
+.ut-rank {
+    display: flex;
+    inline-size: 1.75rem;
+    block-size: 1.75rem;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    background: var(--primary-soft);
+    color: var(--accent-foreground);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+/* Barras de progreso del estado de pedidos */
+.ut-progress {
+    inline-size: 100%;
+    block-size: 0.5rem;
+    overflow: hidden;
+    border-radius: 9999px;
+    background: var(--muted);
+}
+
+.ut-progress-bar {
+    display: block;
+    block-size: 100%;
+    border-radius: 9999px;
+    transition: inline-size 0.3s ease;
+}
+
+.ut-progress-bar-primary {
+    background: var(--primary);
+}
+
+.ut-progress-bar-info {
+    background: var(--secondary-foreground);
+}
+
+.ut-progress-bar-neutral {
+    background: var(--muted-foreground);
+}
+
+.ut-progress-bar-danger {
+    background: var(--destructive);
+}
+
+/* Accesos rápidos del panel */
+.ut-quick-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    background: var(--background);
+    padding: 0.625rem 0.75rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--foreground);
+    transition:
+        border-color 0.15s ease,
+        background-color 0.15s ease,
+        color 0.15s ease;
+}
+
+.ut-quick-link:hover {
+    border-color: color-mix(in srgb, var(--primary) 45%, var(--border));
+    background: var(--primary-soft);
+    color: var(--primary);
+}
+
+@media (max-width: 900px) {
+    .ut-chart-track {
+        block-size: 8rem;
+    }
+}
+
 @media (max-width: 900px) {
     .ut-auth-page {
         padding: 1.5rem 1rem;
