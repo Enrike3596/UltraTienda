@@ -6,9 +6,16 @@ use App\Models\Category;
 use App\Models\OrderDetail;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
+    /**
+     * Reglas comunes para la imagen subida desde el formulario.
+     */
+    private const array IMAGE_RULES = ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'];
+
     /**
      * Display a listing of the resource.
      */
@@ -42,10 +49,14 @@ class ProductController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'price' => ['required', 'numeric', 'min:0'],
-            'image' => ['nullable', 'string', 'max:255'],
+            'image' => self::IMAGE_RULES,
             'disponible' => ['sometimes', 'boolean'],
             'is_active' => ['sometimes', 'boolean'],
         ]);
+
+        if ($request->hasFile('image')) {
+            $validated['image'] = $this->storeProductImage($request->file('image'));
+        }
 
         Product::create($validated);
 
@@ -81,10 +92,21 @@ class ProductController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'price' => ['required', 'numeric', 'min:0'],
-            'image' => ['nullable', 'string', 'max:255'],
+            'image' => self::IMAGE_RULES,
+            'remove_image' => ['sometimes', 'boolean'],
             'disponible' => ['sometimes', 'boolean'],
             'is_active' => ['sometimes', 'boolean'],
         ]);
+
+        if ($request->hasFile('image')) {
+            $this->deleteStoredImage($product->image);
+            $validated['image'] = $this->storeProductImage($request->file('image'));
+        } elseif ($request->boolean('remove_image')) {
+            $this->deleteStoredImage($product->image);
+            $validated['image'] = null;
+        }
+
+        unset($validated['remove_image']);
 
         $product->update($validated);
 
@@ -101,8 +123,28 @@ class ProductController extends Controller
                 ->with('error', 'No se puede eliminar el producto porque está asociado a uno o más pedidos.');
         }
 
+        $this->deleteStoredImage($product->image);
+
         $product->delete();
 
         return redirect()->route('products.index')->with('success', 'Producto eliminado exitosamente.');
+    }
+
+    /**
+     * Guarda la imagen subida en el disco público y devuelve su ruta.
+     */
+    private function storeProductImage(UploadedFile $file): string
+    {
+        return $file->store('products', 'public');
+    }
+
+    /**
+     * Elimina del disco público solo las imágenes gestionadas por este módulo.
+     */
+    private function deleteStoredImage(?string $path): void
+    {
+        if ($path && str_starts_with($path, 'products/') && Storage::disk('public')->exists($path)) {
+            Storage::disk('public')->delete($path);
+        }
     }
 }

@@ -20,7 +20,7 @@
         </x-slot:actions>
     </x-page-header>
 
-    <form method="POST" action="{{ route('products.update', $product) }}" class="ut-card">
+    <form method="POST" action="{{ route('products.update', $product) }}" enctype="multipart/form-data" class="ut-card">
         @csrf
         @method('PUT')
 

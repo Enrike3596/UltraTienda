@@ -61,20 +61,15 @@
                 </thead>
                 <tbody>
                     @forelse ($products as $product)
-                        @php
-                            $image = $product->image;
-                            $imageSrc = $image && str_starts_with($image, 'http') ? $image : ($image ? asset($image) : null);
-                        @endphp
-
                         <tr
                             data-search="{{ $product->name }} {{ $product->category?->name }} {{ $product->description }}"
                             data-status="{{ $product->is_active ? 'active' : 'inactive' }}"
                         >
                             <td>
                                 <div class="flex items-center gap-3">
-                                    @if ($imageSrc)
+                                    @if ($product->image_url)
                                         <img
-                                            src="{{ $imageSrc }}"
+                                            src="{{ $product->image_url }}"
                                             alt="{{ $product->name }}"
                                             loading="lazy"
                                             class="size-10 shrink-0 rounded-lg border object-cover"

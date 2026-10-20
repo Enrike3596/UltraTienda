@@ -71,18 +71,50 @@
 
         <div class="ut-field">
             <label class="ut-label" for="image">Imagen</label>
-            <input
-                type="text"
-                id="image"
-                name="image"
-                value="{{ old('image', $product?->image) }}"
-                placeholder="https://... o ruta dentro de /public"
-                @class(['ut-input', 'ut-input-error' => $errors->has('image')])
-            >
-            @error('image')
-                <p class="ut-error">{{ $message }}</p>
-            @enderror
-            <p class="ut-hint">Deja este campo vacío para usar el icono por defecto.</p>
+            <div class="flex items-center gap-4">
+                <div data-image-preview>
+                    @if ($product?->image_url)
+                        <img
+                            src="{{ $product->image_url }}"
+                            alt="{{ $product->name }}"
+                            class="size-16 shrink-0 rounded-lg border object-cover"
+                        >
+                    @else
+                        <span class="flex size-16 shrink-0 items-center justify-center rounded-lg border bg-primary-soft text-primary">
+                            <x-icon name="package" size="size-6" />
+                        </span>
+                    @endif
+                </div>
+
+                <div class="flex min-w-0 flex-1 flex-col gap-1.5">
+                    <input
+                        type="file"
+                        id="image"
+                        name="image"
+                        accept="image/jpeg,image/png,image/webp"
+                        @class(['ut-input cursor-pointer', 'ut-input-error' => $errors->has('image')])
+                    >
+                    @error('image')
+                        <p class="ut-error">{{ $message }}</p>
+                    @enderror
+                    <p class="ut-hint">JPG, PNG o WebP de máximo 2 MB. Déjalo vacío para conservar la imagen actual.</p>
+                </div>
+            </div>
+
+            @if ($product?->image_url)
+                <label class="mt-1 flex cursor-pointer items-center gap-2.5 text-sm font-medium">
+                    <input type="hidden" name="remove_image" value="0">
+                    <input
+                        type="checkbox"
+                        name="remove_image"
+                        value="1"
+                        class="ut-check"
+                        @checked(old('remove_image'))
+                        data-remove-image
+                    >
+                    Quitar la imagen actual
+                </label>
+            @endif
         </div>
     </div>
 
@@ -125,3 +157,37 @@
         </label>
     </div>
 </div>
+
+@push('scripts')
+    <script>
+        (function () {
+            const input = document.getElementById('image');
+            const preview = document.querySelector('[data-image-preview]');
+            const removeCheckbox = document.querySelector('[data-remove-image]');
+
+            if (!input || !preview) return;
+
+            const placeholder = preview.innerHTML;
+
+            input.addEventListener('change', function () {
+                const file = this.files && this.files[0];
+
+                if (!file || !file.type.startsWith('image/')) return;
+
+                preview.innerHTML =
+                    '<img src="' + URL.createObjectURL(file) + '" alt="Vista previa" class="size-16 shrink-0 rounded-lg border object-cover">';
+
+                if (removeCheckbox) removeCheckbox.checked = false;
+            });
+
+            if (removeCheckbox) {
+                removeCheckbox.addEventListener('change', function () {
+                    if (!this.checked) return;
+
+                    input.value = '';
+                    preview.innerHTML = placeholder;
+                });
+            }
+        })();
+    </script>
+@endpush

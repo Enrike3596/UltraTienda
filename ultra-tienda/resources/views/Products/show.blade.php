@@ -3,11 +3,6 @@
 @section('title', $product->name . ' · Ultra Tienda')
 
 @section('content')
-    @php
-        $image = $product->image;
-        $imageSrc = $image && str_starts_with($image, 'http') ? $image : ($image ? asset($image) : null);
-    @endphp
-
     <x-page-header
         :breadcrumb="['Catálogo', 'Productos', $product->name]"
         :title="$product->name"
@@ -28,9 +23,9 @@
     <div class="ut-card">
         <div class="ut-card-header">
             <div class="flex items-center gap-3">
-                @if ($imageSrc)
+                @if ($product->image_url)
                     <img
-                        src="{{ $imageSrc }}"
+                        src="{{ $product->image_url }}"
                         alt="{{ $product->name }}"
                         class="size-12 shrink-0 rounded-lg border object-cover"
                     >

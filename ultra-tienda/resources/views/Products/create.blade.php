@@ -16,7 +16,7 @@
         </x-slot:actions>
     </x-page-header>
 
-    <form method="POST" action="{{ route('products.store') }}" class="ut-card">
+    <form method="POST" action="{{ route('products.store') }}" enctype="multipart/form-data" class="ut-card">
         @csrf
 
         @include('Products.form')
