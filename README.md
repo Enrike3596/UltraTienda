@@ -14,6 +14,7 @@
 - **Autenticación y roles**: Sistema robusto con roles (admin, client) y permisos diferenciados
 - **Panel de administración**: Interfaz completa para gestión de todos los recursos del sistema
 - **Catálogo filtrado**: Productos disponibles y activos, categorías ordenables
+- **API pública de tienda**: Catálogo y creación de pedidos sin autenticación para el storefront (Vue 3 + Vite)
 
 ## 🛠️ Tecnologías
 
@@ -120,6 +121,55 @@ Mientras Vite está en marcha, Laravel inyecta los assets desde `http://127.0.0.
 
 ## 📡 Rutas principales
 
+### API pública de tienda (sin autenticación)
+
+Estos endpoints los consume el frontend `Ecommerce-Pagina` (Vue 3). No requieren token
+y solo exponen productos y categorías activos.
+
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| `GET` | `/api/store/categories` | Categorías activas con conteo de productos |
+| `GET` | `/api/store/products` | Catálogo paginado con búsqueda, filtros y orden |
+| `GET` | `/api/store/products/{id}` | Detalle de un producto activo |
+| `POST` | `/api/store/orders` | Crea un pedido como invitado (rate limit `20/min`) |
+
+**Filtros de `GET /api/store/products`**
+
+| Parámetro | Tipo | Descripción |
+|-----------|------|-------------|
+| `search` | string (máx. 100) | Busca en nombre y descripción |
+| `category_id` | integer | Filtra por categoría activa |
+| `min_price` / `max_price` | numeric | Rango de precio |
+| `sort` | `recent`, `price_asc`, `price_desc`, `name` | Orden (por defecto `recent`) |
+| `per_page` | integer (1–50) | Tamaño de página (por defecto `50`) |
+
+La respuesta de productos tiene la forma
+`{ "data": [...], "meta": { "current_page", "last_page", "per_page", "total" } }`.
+
+**Cuerpo de `POST /api/store/orders`**
+
+```json
+{
+  "customer_name": "Laura Pérez",
+  "customer_email": "laura@example.com",
+  "customer_phone": "3001112222",
+  "customer_address": "Calle 10 # 25-30",
+  "payment_method": "efectivo",
+  "items": [
+    { "product_id": 1, "quantity": 2 },
+    { "product_id": 3, "quantity": 1 }
+  ]
+}
+```
+
+- `payment_method` acepta `efectivo`, `transferencia` o `contraentrega`.
+- `quantity` va de 1 a 20 y no se permiten productos repetidos en `items`.
+- El servidor **ignora** cualquier `subtotal`, `shipping_cost` o `total` enviado por el
+  cliente: recalcula los importes con los precios de la base de datos.
+- Envío: gratis desde `500.000` de subtotal; en caso contrario `15.000`.
+- Responde `201` con `{ "message", "data": { ..., "items": [...] } }` y `422` con
+  `{ "message", "errors": { "campo": ["..."] } }` cuando hay errores de validación.
+
 ### Rutas web públicas (guest)
 - `GET /login` - Formulario de inicio de sesión
 - `POST /login` - Autenticación
@@ -133,11 +183,56 @@ Mientras Vite está en marcha, Laravel inyecta los assets desde `http://127.0.0.
 - `GET /orders` - Órdenes de compra
 - `GET /roles` - Roles y permisos
 
-### API
+### API administrativa
 
 - `POST /api/login` - Autenticación y token de Sanctum
 - `POST /api/logout` y `GET /api/me` - Sesión API autenticada
 - Recursos protegidos: `/api/roles`, `/api/categories`, `/api/products`, `/api/users`, `/api/orders`, `/api/order-details`, `/api/order-payments`
+
+## 🔌 Conexión con el frontend de tienda
+
+El storefront vive en un proyecto independiente (`Ecommerce-Pagina`, Vue 3 + Vite) y
+consume la API por HTTP absoluta, por lo que el backend debe autorizar su origen.
+
+### Variables de entorno
+
+Añade al `.env` (los valores mostrados son los predeterminados):
+
+```dotenv
+# Orígenes permitidos por CORS (separa varios con comas)
+FRONTEND_URL=http://localhost:5173,http://127.0.0.1:5173
+
+# Moneda y reglas de la tienda
+STOREFRONT_CURRENCY=COP
+STOREFRONT_SHIPPING_COST=15000
+STOREFRONT_FREE_SHIPPING_THRESHOLD=500000
+```
+
+`config/cors.php` lee `FRONTEND_URL` y aplica la lista a `api/*` y
+`sanctum/csrf-cookie`. `config/storefront.php` concentra moneda, envío, métodos de pago y
+paginación.
+
+### Flujo de conexión
+
+1. Levanta el backend: `php artisan serve` (`http://127.0.0.1:8000`).
+2. En `Ecommerce-Pagina` configura `.env`:
+   ```dotenv
+   VITE_API_URL=http://127.0.0.1:8000/api
+   VITE_ASSET_URL=http://127.0.0.1:8000
+   ```
+3. Levanta el storefront: `pnpm dev` (`http://localhost:5173`).
+4. El catálogo se carga desde `GET /api/store/products` y
+   `GET /api/store/categories`; el checkout hace `POST /api/store/orders` y muestra el
+   pedido confirmado con los totales calculados por el backend.
+
+> Si el navegador bloquea las peticiones con un error de CORS, revisa que el origen exacto
+> del frontend (incluido el puerto) esté en `FRONTEND_URL` y ejecuta
+> `php artisan config:clear`.
+
+La colección de Postman del storefront está en
+`postman/modulos/Ultra Tienda - Storefront/` e incluye listado, filtros, detalle, creación
+de pedido y validación `422`.
+
 
 ## 🗄️ Estructura de base de datos
 
@@ -167,6 +262,7 @@ Relaciones clave:
 | `pnpm run dev` | Servidor Vite con hot-reload (puerto 5173) |
 | `composer run dev` | Levanta Laravel + Vite en un solo comando |
 | `php artisan migrate` | Ejecutar migraciones |
+| `php artisan test` | Ejecutar la suite de pruebas (incluye `StorefrontApiTest`) |
 | `php artisan config:show app.name` | Ver configuración |
 
 ## 🤝 Contribución

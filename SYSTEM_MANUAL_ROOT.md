@@ -295,6 +295,7 @@ El backend de UltraTienda está construido completamente con Laravel y cumple la
 - **Controladores**: Procesan la lógica, validan entradas, interactúan con modelos
 - **Autenticación y Autorización**: middleware `auth` protege rutas sensibles
 - **API RESTful**: `routes/api.php` expone recursos JSON protegidos con Laravel Sanctum
+  y la API pública `/api/store/*` que consume el storefront
 - **Gestor de vistas**: Motor Blade renderiza plantillas HTML
 
 ### 5.2 Arquitectura Frontend
@@ -304,6 +305,11 @@ El frontend utiliza tecnologías modernas de interfaz:
 - **Tailwind CSS v4.0.0**: Framework de CSS utility-first para estilos responsivos
 - **DaisyUI v5.7.47**: Componentes UI pre-diseñados para Tailwind
 - **Material Tailwind HTML**: Estructura de componentes visuales
+
+Además del panel Blade, el sistema cuenta con un **storefront independiente** en
+`Ecommerce-Pagina` (Vue 3, TypeScript, Pinia, Vue Router y Tailwind CSS 4) que consume la
+API pública descrita en la sección 5.4. Ese proyecto mantiene su propia documentación
+(`README.md` y `MANUAL_FRONTEND.md`).
 
 #### Estructura de Vistas Blade (`resources/views/`)
 
@@ -353,6 +359,102 @@ Respuesta al navegador
 - `resources/css/` o directivas `@tailwind` en Blade
 - `pnpm build` genera los archivos optimizados en `public/build/` y elimina `public/hot`
 - `pnpm run dev` para desarrollo con hot-reload (Vite en `http://127.0.0.1:5173`)
+
+### 5.4 Tienda pública (Storefront API)
+
+Además del panel administrativo, UltraTienda expone una API pública para el storefront
+desarrollado en **Vue 3 + TypeScript + Vite** (proyecto `Ecommerce-Pagina`). Estos
+endpoints no requieren token y solo devuelven información visible para clientes.
+
+#### Endpoints
+
+| Método | Ruta | Controlador | Descripción |
+|--------|------|-------------|-------------|
+| `GET` | `/api/store/categories` | `Api\Storefront\CategoryController@index` | Categorías activas con conteo de productos activos |
+| `GET` | `/api/store/products` | `Api\Storefront\ProductController@index` | Catálogo paginado con filtros y orden |
+| `GET` | `/api/store/products/{product}` | `Api\Storefront\ProductController@show` | Detalle de producto activo (404 si está oculto) |
+| `POST` | `/api/store/orders` | `Api\Storefront\OrderController@store` | Crea un pedido como invitado |
+
+Las rutas se registran en `routes/api.php` dentro de un grupo `Route::prefix('store')`,
+separado del grupo `auth:sanctum` que protege la API administrativa.
+
+#### Contrato de producto
+
+```json
+{
+  "id": 1,
+  "name": "Audífonos Bluetooth",
+  "description": "Cancelación activa de ruido",
+  "price": 250000,
+  "currency": "COP",
+  "image": "http://127.0.0.1:8000/storage/products/audifonos.jpg",
+  "available_for_sale": true,
+  "category": { "id": 1, "name": "Electrónica" },
+  "created_at": "2026-10-01T09:00:00+00:00"
+}
+```
+
+`GET /api/store/products` responde `{ "data": [...], "meta": {...} }`. La búsqueda usa
+`whereLike` sobre `name` y `description`; los filtros `category_id`, `min_price`,
+`max_price` y `sort` se validan antes de aplicarse. Solo se incluyen productos
+`is_active` cuya categoría también esté activa.
+
+#### Creación de pedidos
+
+`POST /api/store/orders` recibe datos del cliente y las líneas del carrito:
+
+```json
+{
+  "customer_name": "Laura Pérez",
+  "customer_email": "laura@example.com",
+  "customer_phone": "3001112222",
+  "customer_address": "Calle 10 # 25-30",
+  "payment_method": "efectivo",
+  "items": [{ "product_id": 1, "quantity": 2 }]
+}
+```
+
+Reglas implementadas en `App\Http\Controllers\Api\Storefront\OrderController`:
+
+1. Valida campos, método de pago (`efectivo`, `transferencia`, `contraentrega`),
+   cantidad (1–20) y que no haya productos repetidos.
+2. Verifica que cada producto exista, esté activo, pertenezca a una categoría activa y
+   tenga `disponible = true`; de lo contrario responde `422` con el índice de la línea.
+3. Calcula **en el servidor** subtotal, envío y total. Los importes enviados por el
+   cliente se ignoran por diseño.
+4. Persiste la orden y sus detalles dentro de una transacción (`DB::transaction`), con
+   `status = pending` y `payment_status = pending`.
+5. Responde `201` con el pedido y sus líneas, incluyendo `unit_price` y `line_total`.
+
+La ruta usa `throttle:20,1` para limitar la creación de pedidos a 20 por minuto.
+
+#### Configuración
+
+| Archivo | Contenido |
+|---------|-----------|
+| `config/storefront.php` | Moneda, costo de envío, umbral de envío gratis, métodos de pago y `per_page` |
+| `config/cors.php` | Orígenes permitidos, leídos de `FRONTEND_URL` separado por comas |
+| `.env` | `FRONTEND_URL`, `STOREFRONT_CURRENCY`, `STOREFRONT_SHIPPING_COST`, `STOREFRONT_FREE_SHIPPING_THRESHOLD` |
+
+#### Flujo de integración
+
+```
+Storefront (Vue 3, http://localhost:5173)
+        ↓  fetch VITE_API_URL + /store/products
+CORS (FRONTEND_URL autoriza el origen)
+        ↓
+routes/api.php → Api\Storefront\ProductController
+        ↓
+Product::with('category')->where('is_active', true)
+        ↓
+Respuesta JSON { data, meta }
+        ↓
+Pinia (stores/catalog.ts) → componentes del catálogo
+```
+
+Al finalizar la compra, el storefront envía `POST /api/store/orders`; el backend
+recalcula los importes, guarda la orden y devuelve el número de pedido y el total
+confirmado, que el frontend muestra en el diálogo de éxito.
 
 ---
 
@@ -519,13 +621,24 @@ ultra-tienda/
 - `pnpm build` antes de desplegar (deja `public/hot` eliminado)
 - CDN de Tailwind o build propio
 - Verificar que `public/build/` contenga los assets compilados
+- El storefront se compila por separado (`cd Ecommerce-Pagina && pnpm build`) y se sirve
+  como sitio estático; su `VITE_API_URL` debe apuntar a la URL pública del backend
 
 ### 9.4 Seguridad
 
 - Mantener PHP y Laravel actualizados
 - Usar HTTPS en producción
-- Rate limiting en rutas de auth
+- Rate limiting en rutas de auth y en `POST /api/store/orders` (`throttle:20,1`)
 - Validación siempre en servidor (nunca confiar en cliente)
+- Restringir `FRONTEND_URL` a los orígenes reales del storefront; no usar `*` en producción
+- Los precios y totales se recalculan en el servidor: no se aceptan importes del cliente
+
+### 9.5 Pruebas
+
+- `php artisan test` ejecuta la suite completa (Feature + Unit).
+- `php artisan test --filter=StorefrontApiTest` valida la API pública: categorías,
+  filtros del catálogo, detalle, totales calculados, envío gratis, stock y validación.
+- Los tests usan `RefreshDatabase`, por lo que no afectan la base de datos de desarrollo.
 
 ---
 
@@ -535,7 +648,11 @@ El sistema **UltraTienda** implementa una arquitectura Laravel MVC robusta y esc
 
 El uso de Blade templates con Tailwind CSS/DaisyUI permite una interfaz de usuario moderna y responsiva, mientras que Eloquent ORM abstrae la complejidad de las consultas SQL. Este manual sirve como base para el onboarding de nuevos desarrolladores, mantenimiento continuo y futura expansión de funcionalidades.
 
+La incorporación de la API pública `/api/store/*` desacopla el storefront (Vue 3) del panel
+administrativo, mantiene los precios y totales bajo control del servidor y permite que
+ambos frontends evolucionen de forma independiente sobre el mismo dominio de datos.
+
 ---
-*Documento actualizado el: 18 de octubre de 2026*
-*Versión: 1.1*
+*Documento actualizado el: 3 de noviembre de 2026*
+*Versión: 1.2*
 *Sistema: UltraTienda - Laravel 13.x - SQLite (desarrollo) / PostgreSQL (alternativa)*

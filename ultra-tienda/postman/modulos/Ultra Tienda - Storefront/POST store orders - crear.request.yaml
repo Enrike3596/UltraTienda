@@ -1,0 +1,32 @@
+$kind: http-request
+url: "{{baseUrl}}/api/store/orders"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+body:
+  type: json
+  content: |-
+    {
+      "customer_name": "Laura Pérez",
+      "customer_email": "laura@example.com",
+      "customer_phone": "3001112222",
+      "customer_address": "Calle 10 # 25-30, Bogotá",
+      "payment_method": "efectivo",
+      "items": [
+        { "product_id": 1, "quantity": 1 }
+      ]
+    }
+scripts:
+  - type: http:afterResponse
+    code: |-
+      pm.test('Pedido creado', function () {
+        pm.response.to.have.status(201);
+      });
+      pm.test('El servidor calcula el total', function () {
+        var body = pm.response.json();
+        pm.expect(body.data.total).to.be.a('number');
+        pm.expect(body.data.subtotal + body.data.shipping_cost).to.eql(body.data.total);
+      });
+    language: text/javascript
+order: 3000

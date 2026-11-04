@@ -1,0 +1,6 @@
+$kind: http-request
+url: "{{baseUrl}}/api/store/products?search=audio&category_id=&min_price=&max_price=&sort=price_asc&per_page=50"
+method: GET
+headers:
+  Accept: application/json
+order: 2100

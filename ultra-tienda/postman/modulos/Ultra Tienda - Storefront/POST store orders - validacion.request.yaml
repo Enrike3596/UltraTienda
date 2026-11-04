@@ -1,0 +1,28 @@
+$kind: http-request
+url: "{{baseUrl}}/api/store/orders"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+body:
+  type: json
+  content: |-
+    {
+      "customer_name": "",
+      "customer_email": "correo-invalido",
+      "customer_phone": "",
+      "customer_address": "",
+      "payment_method": "bitcoin",
+      "items": []
+    }
+scripts:
+  - type: http:afterResponse
+    code: |-
+      pm.test('Validación 422', function () {
+        pm.response.to.have.status(422);
+      });
+      pm.test('Devuelve errores por campo', function () {
+        pm.expect(pm.response.json().errors).to.be.an('object');
+      });
+    language: text/javascript
+order: 3100

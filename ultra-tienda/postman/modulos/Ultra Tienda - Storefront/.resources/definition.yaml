@@ -1,0 +1,13 @@
+$kind: collection
+description: |-
+  API pública de la tienda (sin autenticación). Consumida por el storefront Vue de Ecommerce-Pagina.
+  Solo devuelve productos y categorías activos y crea pedidos como invitado.
+  El servidor recalcula subtotal, envío y total: los importes enviados por el cliente se ignoran.
+  CÓMO USAR ESTA COLECCIÓN (importar en Postman: Import > File, o arrastrar el archivo):
+  1. Importa el entorno `UltraTienda-API.environment.yaml` y selecciónalo arriba a la derecha.
+  2. No requiere token: ejecuta directamente cualquier solicitud.
+  3. Crea primero un pedido con `POST store orders - crear` usando productId de un producto existente.
+  baseUrl = http://127.0.0.1:8000 (cámbialo si el servidor corre en otro puerto).
+variables:
+  baseUrl: http://127.0.0.1:8000
+  productId: "1"
