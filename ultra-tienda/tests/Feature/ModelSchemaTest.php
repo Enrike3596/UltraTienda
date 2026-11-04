@@ -24,7 +24,7 @@ class ModelSchemaTest extends TestCase
      *
      * @var list<string>
      */
-    private const array RESERVED_COLUMNS = ['id', 'created_at', 'updated_at', 'email_verified_at', 'remember_token'];
+    private const RESERVED_COLUMNS = ['id', 'created_at', 'updated_at', 'email_verified_at', 'remember_token'];
 
     /**
      * @return iterable<string, array{class-string<Model>, string}>

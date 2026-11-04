@@ -14,7 +14,7 @@ class ProductController extends Controller
     /**
      * Reglas comunes para la imagen subida desde el formulario.
      */
-    private const array IMAGE_RULES = ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'];
+    private const IMAGE_RULES = ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'];
 
     /**
      * Display a listing of the resource.

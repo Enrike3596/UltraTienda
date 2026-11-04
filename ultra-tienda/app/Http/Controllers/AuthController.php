@@ -10,6 +10,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -20,7 +21,7 @@ class AuthController extends Controller
     /**
      * Minutos de vigencia del código de recuperación.
      */
-    private const int RECOVERY_TTL_MINUTES = 15;
+    private const RECOVERY_TTL_MINUTES = 15;
 
     /**
      * Muestra el formulario de inicio de sesión.
@@ -62,7 +63,7 @@ class AuthController extends Controller
             $authenticated = Auth::attempt($validator->validated(), $request->boolean('remember'));
         } catch (\RuntimeException $e) {
             // Hash de password inválido en BD (ej. $2a$ en vez de $2y$): no debe ser un 500.
-            \Log::warning('Login con hash inválido: '.$e->getMessage(), [
+            Log::warning('Login con hash inválido: '.$e->getMessage(), [
                 'email' => $validator->validated()['email'] ?? null,
             ]);
             $authenticated = false;
@@ -143,7 +144,7 @@ class AuthController extends Controller
                 $user->notify(new RecoveryCodeNotification($code));
             } catch (\Exception $e) {
                 // Log error but continue - user will see message on next page
-                \Log::error('Recovery code notification failed: ' . $e->getMessage());
+                Log::error('Recovery code notification failed: ' . $e->getMessage());
             }
 
             $request->session()->put('recovery_email', $user->email);
