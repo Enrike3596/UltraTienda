@@ -1009,7 +1009,7 @@ html.dark .ut-theme-moon {
     overflow: hidden;
     background:
         linear-gradient(90deg, rgb(3 13 36 / 0.7) 0%, rgb(3 13 36 / 0.4) 48%, rgb(3 13 36 / 0.12) 100%),
-        url('/images/auth/ventas-neon.jpg') 72% center / cover no-repeat,
+        url('../images/auth/ventas-neon.jpg') 72% center / cover no-repeat,
         linear-gradient(150deg, #061a40 0%, #031332 100%);
     color: #fff;
     padding: clamp(2rem, 5vw, 3.5rem);

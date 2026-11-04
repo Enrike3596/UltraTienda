@@ -351,8 +351,8 @@ Respuesta al navegador
 - **Vite** es el build tool que procesa archivos `.js` y `.css`
 - `resources/js/` contiene el JavaScript de la aplicación
 - `resources/css/` o directivas `@tailwind` en Blade
-- `npm run build` genera los archivos optimizados en `public/build/`
-- `npm run dev` para desarrollo con hot-reload
+- `pnpm build` genera los archivos optimizados en `public/build/` y elimina `public/hot`
+- `pnpm run dev` para desarrollo con hot-reload (Vite en `http://127.0.0.1:5173`)
 
 ---
 
@@ -493,7 +493,7 @@ ultra-tienda/
 | `php artisan migrate:refresh --seed` | Revertir y volver a ejecutar + seed |
 | `php artisan tinker` | Interactuar con la aplicación PHP |
 | `php artisan serve` | Servidor de desarrollo |
-| `npm run build` | Compilar assets de producción |
+| `pnpm build` | Compilar assets de producción |
 
 ---
 
@@ -516,7 +516,7 @@ ultra-tienda/
 
 ### 9.3 Frontend
 
-- `npm run build` antes de desplegar
+- `pnpm build` antes de desplegar (deja `public/hot` eliminado)
 - CDN de Tailwind o build propio
 - Verificar que `public/build/` contenga los assets compilados
 

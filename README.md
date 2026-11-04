@@ -31,7 +31,7 @@
 
 - PHP >= 8.3
 - Composer
-- Node.js & npm (o pnpm)
+- Node.js 20+ y pnpm
 - SQLite (incluido para desarrollo) o PostgreSQL
 
 ## 🔧 Instalación
@@ -62,16 +62,56 @@ php artisan key:generate
 php artisan migrate --force
 
 # 6. Instalar dependencias frontend
-npm install
+pnpm install
 
 # 7. Compilar assets
-npm run build
+pnpm build
 
 # 8. Iniciar servidor
 php artisan serve
 ```
 
 El sistema estará disponible en `http://localhost:8000`
+
+## ▶️ Ejecución
+
+Hay dos formas válidas de levantar el proyecto. **No las mezcles**: Laravel usa el archivo `public/hot` cuando existe y solo recurre al manifest de `public/build` cuando ese archivo no está.
+
+### Opción A — Assets compilados (sin hot-reload)
+
+```bash
+pnpm build          # compila public/build y elimina public/hot
+php artisan serve   # http://localhost:8000
+```
+
+Es la forma más simple de ver el sistema completo. Cada vez que cambies CSS o JS debes volver a ejecutar `pnpm build`.
+
+### Opción B — Desarrollo con hot-reload
+
+```bash
+# Terminal 1
+php artisan serve
+
+# Terminal 2
+pnpm run dev        # Vite en http://127.0.0.1:5173
+```
+
+O ambos procesos en un solo comando:
+
+```bash
+composer run dev
+```
+
+Mientras Vite está en marcha, Laravel inyecta los assets desde `http://127.0.0.1:5173`. Al detenerlo con `Ctrl+C` el script elimina `public/hot` y Laravel vuelve a usar los assets compilados.
+
+### Errores frecuentes de assets
+
+| Síntoma | Causa | Solución |
+|---------|-------|----------|
+| `:5173/@vite/client: net::ERR_CONNECTION_REFUSED` | Existe `public/hot` de un `pnpm run dev` anterior, pero no hay servidor Vite escuchando | Ejecutar `pnpm run dev`, o `pnpm build` para volver a los assets compilados |
+| `Unable to locate file in Vite manifest` | `public/build` no existe o está desactualizado | Ejecutar `pnpm build` |
+| `Ya hay un servidor Vite escuchando en http://127.0.0.1:5173` | Otro proyecto (o una instancia anterior) ocupa el puerto 5173 | Cerrar ese proceso y reintentar; el proyecto usa `strictPort` |
+
 
 ## 👤 Credenciales por defecto
 
@@ -123,8 +163,9 @@ Relaciones clave:
 | Script | Descripción |
 |--------|-------------|
 | `php artisan serve` | Servidor de desarrollo (puerto 8000) |
-| `npm run build` | Compilar assets de producción |
-| `npm run dev` | Modo desarrollo Vite |
+| `pnpm build` | Compilar assets de producción (limpia `public/hot`) |
+| `pnpm run dev` | Servidor Vite con hot-reload (puerto 5173) |
+| `composer run dev` | Levanta Laravel + Vite en un solo comando |
 | `php artisan migrate` | Ejecutar migraciones |
 | `php artisan config:show app.name` | Ver configuración |
 
