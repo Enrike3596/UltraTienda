@@ -161,6 +161,27 @@ document.addEventListener('submit', (event) => {
 
 /* --------------------------- Buscador de tablas -------------------------- */
 
+function addResponsiveTableLabels() {
+    document.querySelectorAll('.ut-table').forEach((table) => {
+        const headers = Array.from(table.tHead?.rows[0]?.cells || []).map((cell) =>
+            cell.textContent.trim(),
+        );
+
+        table.querySelectorAll('tbody tr').forEach((row) => {
+            const cells = Array.from(row.cells);
+
+            if (cells.some((cell) => cell.hasAttribute('colspan'))) {
+                row.setAttribute('data-empty-row', '');
+                return;
+            }
+
+            cells.forEach((cell, index) => {
+                if (headers[index]) cell.dataset.label = headers[index];
+            });
+        });
+    });
+}
+
 function filterTable(table) {
     const query = (table.dataset.query || '').trim().toLowerCase();
     const status = table.dataset.status || 'all';
@@ -229,6 +250,7 @@ function bindTableControls() {
     });
 }
 
+addResponsiveTableLabels();
 bindTableControls();
 
 /* --------------------------- Navegación rápida --------------------------- */

@@ -232,6 +232,10 @@
         @apply mb-6 flex flex-col gap-4 md:flex-row md:items-end md:justify-between;
     }
 
+    .ut-page-header > :last-child {
+        @apply flex-wrap;
+    }
+
     .ut-breadcrumb {
         @apply flex flex-wrap items-center gap-1.5 text-xs font-medium text-muted-foreground;
     }
@@ -258,7 +262,8 @@
     }
 
     .ut-table-wrap {
-        @apply overflow-x-auto;
+        @apply max-w-full overflow-x-auto overscroll-x-contain;
+        scrollbar-width: thin;
     }
 
     .ut-table {
@@ -323,6 +328,139 @@
     .ut-select-error,
     .ut-textarea-error {
         @apply border-destructive focus:border-destructive focus:ring-destructive/20;
+    }
+
+    /* -------------------------- Responsive panel --------------------------- */
+    @media (max-width: 639px) {
+        .ut-main {
+            @apply px-3 py-4;
+        }
+
+        .ut-page-header > :last-child,
+        .ut-page-header > :last-child > .ut-btn {
+            @apply w-full;
+        }
+
+        .ut-page-header > :last-child > .ut-btn {
+            @apply justify-center;
+        }
+
+        .ut-toolbar {
+            @apply gap-3 border-b p-4;
+            background: color-mix(in srgb, var(--card) 92%, var(--muted));
+        }
+
+        .ut-toolbar-group,
+        .ut-toolbar-group > *,
+        .ut-toolbar-group .ut-select {
+            @apply w-full;
+        }
+
+        .ut-table {
+            min-width: 0;
+            width: 100%;
+        }
+
+        .ut-table-wrap {
+            padding: 0.75rem;
+            background: color-mix(in srgb, var(--muted) 28%, transparent);
+        }
+
+        .ut-table thead {
+            position: absolute;
+            inline-size: 1px;
+            block-size: 1px;
+            overflow: hidden;
+            clip: rect(0 0 0 0);
+            white-space: nowrap;
+        }
+
+        .ut-table tbody {
+            display: block;
+        }
+
+        .ut-table tbody tr:not([data-empty-row]) {
+            display: block;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            background: var(--card);
+            box-shadow: 0 1px 2px rgb(0 0 0 / 0.06);
+        }
+
+        .ut-table tbody tr:not([data-empty-row]) + tr:not([data-empty-row]) {
+            margin-top: 0.75rem;
+        }
+
+        .ut-table tbody tr:not([data-empty-row]) {
+            @apply p-4;
+        }
+
+        .ut-table tbody tr:not([data-empty-row]) td {
+            display: grid;
+            grid-template-columns: minmax(6.5rem, 36%) minmax(0, 1fr);
+            gap: 1rem;
+            min-width: 0;
+            padding: 0.625rem 0;
+            text-align: left;
+        }
+
+        .ut-table tbody tr:not([data-empty-row]) td::before {
+            content: attr(data-label);
+            @apply text-xs font-semibold tracking-wide text-muted-foreground uppercase;
+        }
+
+        .ut-table tbody tr:not([data-empty-row]) td > * {
+            min-width: 0;
+        }
+
+        .ut-table tbody tr:not([data-empty-row]) .ut-td-right,
+        .ut-table tbody tr:not([data-empty-row]) .ut-td-center {
+            text-align: left;
+        }
+
+        .ut-table tbody tr:not([data-empty-row]) td:first-child {
+            padding-top: 0;
+        }
+
+        .ut-table tbody tr:not([data-empty-row]) td:last-child {
+            margin-top: 0.25rem;
+            border-top: 1px solid var(--border);
+            padding-top: 0.875rem;
+            padding-bottom: 0;
+        }
+
+        .ut-table tbody tr:not([data-empty-row]) td:last-child > div {
+            justify-content: flex-end;
+            gap: 0.5rem;
+        }
+
+        .ut-table tbody tr[data-empty-row] td {
+            display: table-cell;
+        }
+
+        .ut-table tbody tr[data-empty-row] {
+            display: block;
+        }
+
+        .ut-card-footer {
+            @apply items-stretch px-3;
+        }
+
+        .ut-card-footer > nav {
+            @apply justify-center;
+        }
+    }
+
+    @media (min-width: 640px) and (max-width: 1023px) {
+        .ut-table th,
+        .ut-table td {
+            @apply px-3;
+        }
+
+        .ut-toolbar-group {
+            @apply flex-wrap;
+        }
     }
 
     .ut-check {
