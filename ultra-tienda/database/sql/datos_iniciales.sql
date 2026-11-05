@@ -43,22 +43,22 @@ ON CONFLICT DO NOTHING;
 -- 3) categories (5)
 -- ---------------------------------------------------------------------
 INSERT INTO categories (id, name, description, orden, is_active, created_at, updated_at) VALUES
-    (1, 'Electrónica',          'Audio, cómputo y dispositivos inteligentes.',        1, TRUE, '2026-10-01 09:00:00', '2026-10-01 09:00:00'),
-    (2, 'Hogar y Cocina',       'Electrodomésticos y artículos para el hogar.',       2, TRUE, '2026-10-01 09:00:00', '2026-10-01 09:00:00'),
-    (3, 'Deportes',             'Artículos para entrenamiento y vida activa.',        3, TRUE, '2026-10-01 09:00:00', '2026-10-01 09:00:00'),
-    (4, 'Ropa y Accesorios',    'Prendas y accesorios de uso diario.',                4, TRUE, '2026-10-01 09:00:00', '2026-10-01 09:00:00'),
-    (5, 'Oficina y Papelería',  'Mobiliario y útiles para el trabajo.',               5, TRUE, '2026-10-01 09:00:00', '2026-10-01 09:00:00')
+    (1, 'Tecnología Wearable',  'Dispositivos inteligentes para llevar puestos: smartwatches, pulseras de actividad y bandas de fitness.', 1, TRUE, '2026-10-01 09:00:00', '2026-10-01 09:00:00'),
+    (2, 'Hogar Inteligente',    'Dispositivos y asistentes conectados para automatizar la iluminación, la seguridad y el confort del hogar.', 2, TRUE, '2026-10-01 09:00:00', '2026-10-01 09:00:00'),
+    (3, 'Smartphone Premium',   'Teléfonos inteligentes de gama alta con pantallas de alta resolución, cámaras avanzadas y máximo rendimiento.', 3, TRUE, '2026-10-01 09:00:00', '2026-10-01 09:00:00'),
+    (4, 'Accesorios Gaming',    'Periféricos y complementos para videojuegos: controles, audífonos, teclados, mouse y sillas gamer.', 4, TRUE, '2026-10-01 09:00:00', '2026-10-01 09:00:00'),
+    (5, 'Computadores',         'Portátiles y equipos de escritorio para trabajo, estudio y entretenimiento de alto rendimiento.', 5, TRUE, '2026-10-01 09:00:00', '2026-10-01 09:00:00')
 ON CONFLICT DO NOTHING;
 
 -- ---------------------------------------------------------------------
 -- 4) products (5) · uno por categoría
 -- ---------------------------------------------------------------------
 INSERT INTO products (id, category_id, name, description, price, image, disponible, is_active, created_at, updated_at) VALUES
-    (1, 1, 'Auriculares Bluetooth X200',    'Auriculares inalámbricos con cancelación de ruido y 30 h de batería.',        149900.00, NULL, TRUE, TRUE, '2026-10-01 10:00:00', '2026-10-01 10:00:00'),
-    (2, 2, 'Licuadora Pro 1.5 L',           'Licuadora de vaso con motor de 1000 W, 5 velocidades y jarra resistente.',  259900.00, NULL, TRUE, TRUE, '2026-10-01 10:05:00', '2026-10-01 10:05:00'),
-    (3, 3, 'Balón de Fútbol Profesional',   'Balón talla 5 con costura reforzada y agarre superior para césped sintético.', 89900.00, NULL, TRUE, TRUE, '2026-10-01 10:10:00', '2026-10-01 10:10:00'),
-    (4, 4, 'Mochila Urbana 25 L',           'Mochila impermeable con compartimento acolchado para portátil de 15 pulgadas.', 119900.00, NULL, TRUE, TRUE, '2026-10-01 10:15:00', '2026-10-01 10:15:00'),
-    (5, 5, 'Silla Ergonómica Executive',    'Silla con soporte lumbar regulable, reposabrazos 4D y base de aluminio.',    549900.00, NULL, TRUE, TRUE, '2026-10-01 10:20:00', '2026-10-01 10:20:00')
+    (1, 1, 'Wearable Portable',   'Dispositivo wearable portátil con monitoreo de actividad física, notificaciones y batería de larga duración.', 149900.00, NULL, TRUE, TRUE, '2026-10-01 10:00:00', '2026-10-01 10:00:00'),
+    (2, 2, 'Alexa Portable',      'Altavoz inteligente portátil con asistente de voz Alexa, conexión Wi-Fi y control por comandos de voz.', 259900.00, NULL, TRUE, TRUE, '2026-10-01 10:05:00', '2026-10-01 10:05:00'),
+    (3, 3, 'Teléfono Pro Max',    'Teléfono inteligente de gama alta con pantalla AMOLED, cámara de alta resolución y almacenamiento ampliable.', 89900.00, NULL, TRUE, TRUE, '2026-10-01 10:10:00', '2026-10-01 10:10:00'),
+    (4, 4, 'Combo Streaming',    'Combo de streaming con micrófono, cámara web y aro de luz para transmisiones, videollamadas y creación de contenido.', 119900.00, NULL, TRUE, TRUE, '2026-10-01 10:15:00', '2026-10-01 10:15:00'),
+    (5, 5, 'Portátil Master',     'Portátil de alto rendimiento con procesador potente, almacenamiento SSD y pantalla Full HD para trabajo y estudio.', 549900.00, NULL, TRUE, TRUE, '2026-10-01 10:20:00', '2026-10-01 10:20:00')
 ON CONFLICT DO NOTHING;
 
 -- ---------------------------------------------------------------------
