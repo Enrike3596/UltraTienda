@@ -71,7 +71,6 @@
                                     </span>
                                     <div class="min-w-0">
                                         <p class="truncate font-semibold">{{ $category->name }}</p>
-                                        <p class="font-mono text-xs text-muted-foreground">ID {{ $category->id }}</p>
                                     </div>
                                 </div>
                             </td>

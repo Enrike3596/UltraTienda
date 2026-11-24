@@ -57,7 +57,6 @@
                                     </span>
                                     <div class="min-w-0">
                                         <p class="truncate font-semibold capitalize">{{ $role->name }}</p>
-                                        <p class="font-mono text-xs text-muted-foreground">ID {{ $role->id }}</p>
                                     </div>
                                 </div>
                             </td>

@@ -56,9 +56,6 @@
                                     <x-avatar :label="$user->name" size="size-9" />
                                     <div class="min-w-0">
                                         <p class="truncate font-semibold">{{ $user->name }}</p>
-                                        <p class="truncate text-xs text-muted-foreground">
-                                            ID {{ $user->id }}
-                                        </p>
                                     </div>
                                 </div>
                             </td>
