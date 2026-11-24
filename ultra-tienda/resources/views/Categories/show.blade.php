@@ -44,7 +44,7 @@
                     <dd class="font-mono font-semibold">{{ $category->orden }}</dd>
                 </div>
                 <div>
-                    <dt class="ut-hint">Productos asociados</dt>
+                    <dt class="ut-hint">N.º de productos</dt>
                     <dd class="font-mono font-semibold">{{ $category->products()->count() }}</dd>
                 </div>
                 <div>

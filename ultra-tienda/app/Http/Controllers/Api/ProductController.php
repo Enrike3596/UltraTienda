@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Category;
 use App\Models\OrderDetail;
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
@@ -25,6 +24,7 @@ class ProductController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'price' => ['required', 'numeric', 'min:0'],
+            'stock' => ['sometimes', 'integer', 'min:0'],
             'image' => ['nullable', 'string', 'max:255'],
             'disponible' => ['sometimes', 'boolean'],
             'is_active' => ['sometimes', 'boolean'],
@@ -45,6 +45,7 @@ class ProductController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'price' => ['required', 'numeric', 'min:0'],
+            'stock' => ['sometimes', 'integer', 'min:0'],
             'image' => ['nullable', 'string', 'max:255'],
             'disponible' => ['sometimes', 'boolean'],
             'is_active' => ['sometimes', 'boolean'],

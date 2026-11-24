@@ -12,6 +12,7 @@ body:
       "name": "Parlante Bluetooth Test Edit",
       "description": "Descripcion actualizada",
       "price": 109900,
+      "stock": 15,
       "disponible": true,
       "is_active": true
     }

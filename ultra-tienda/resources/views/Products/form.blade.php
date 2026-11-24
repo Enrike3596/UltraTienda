@@ -70,52 +70,71 @@
         </div>
 
         <div class="ut-field">
-            <label class="ut-label" for="image">Imagen</label>
-            <div class="flex items-center gap-4">
-                <div data-image-preview>
-                    @if ($product?->image_url)
-                        <img
-                            src="{{ $product->image_url }}"
-                            alt="{{ $product->name }}"
-                            class="size-16 shrink-0 rounded-lg border object-cover"
-                        >
-                    @else
-                        <span class="flex size-16 shrink-0 items-center justify-center rounded-lg border bg-primary-soft text-primary">
-                            <x-icon name="package" size="size-6" />
-                        </span>
-                    @endif
-                </div>
+            <label class="ut-label" for="stock">Cantidad en stock</label>
+            <input
+                type="number"
+                id="stock"
+                name="stock"
+                step="1"
+                min="0"
+                value="{{ old('stock', $product?->stock ?? 0) }}"
+                placeholder="0"
+                required
+                @class(['ut-input', 'ut-input-error' => $errors->has('stock')])
+            >
+            @error('stock')
+                <p class="ut-error">{{ $message }}</p>
+            @enderror
+            <p class="ut-hint">Unidades disponibles en inventario.</p>
+        </div>
+    </div>
 
-                <div class="flex min-w-0 flex-1 flex-col gap-1.5">
-                    <input
-                        type="file"
-                        id="image"
-                        name="image"
-                        accept="image/jpeg,image/png,image/webp"
-                        @class(['ut-input cursor-pointer', 'ut-input-error' => $errors->has('image')])
+    <div class="ut-field">
+        <label class="ut-label" for="image">Imagen</label>
+        <div class="flex items-center gap-4">
+            <div data-image-preview>
+                @if ($product?->image_url)
+                    <img
+                        src="{{ $product->image_url }}"
+                        alt="{{ $product->name }}"
+                        class="size-16 shrink-0 rounded-lg border object-cover"
                     >
-                    @error('image')
-                        <p class="ut-error">{{ $message }}</p>
-                    @enderror
-                    <p class="ut-hint">JPG, PNG o WebP de máximo 2 MB. Déjalo vacío para conservar la imagen actual.</p>
-                </div>
+                @else
+                    <span class="flex size-16 shrink-0 items-center justify-center rounded-lg border bg-primary-soft text-primary">
+                        <x-icon name="package" size="size-6" />
+                    </span>
+                @endif
             </div>
 
-            @if ($product?->image_url)
-                <label class="mt-1 flex cursor-pointer items-center gap-2.5 text-sm font-medium">
-                    <input type="hidden" name="remove_image" value="0">
-                    <input
-                        type="checkbox"
-                        name="remove_image"
-                        value="1"
-                        class="ut-check"
-                        @checked(old('remove_image'))
-                        data-remove-image
-                    >
-                    Quitar la imagen actual
-                </label>
-            @endif
+            <div class="flex min-w-0 flex-1 flex-col gap-1.5">
+                <input
+                    type="file"
+                    id="image"
+                    name="image"
+                    accept="image/jpeg,image/png,image/webp"
+                    @class(['ut-input cursor-pointer', 'ut-input-error' => $errors->has('image')])
+                >
+                @error('image')
+                    <p class="ut-error">{{ $message }}</p>
+                @enderror
+                <p class="ut-hint">JPG, PNG o WebP de máximo 2 MB. Déjalo vacío para conservar la imagen actual.</p>
+            </div>
         </div>
+
+        @if ($product?->image_url)
+            <label class="mt-1 flex cursor-pointer items-center gap-2.5 text-sm font-medium">
+                <input type="hidden" name="remove_image" value="0">
+                <input
+                    type="checkbox"
+                    name="remove_image"
+                    value="1"
+                    class="ut-check"
+                    @checked(old('remove_image'))
+                    data-remove-image
+                >
+                Quitar la imagen actual
+            </label>
+        @endif
     </div>
 
     <div class="ut-field">

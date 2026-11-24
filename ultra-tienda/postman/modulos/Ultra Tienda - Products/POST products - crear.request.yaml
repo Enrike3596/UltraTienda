@@ -12,6 +12,7 @@ body:
       "name": "Parlante Bluetooth Test",
       "description": "Producto de prueba desde Postman",
       "price": 99900,
+      "stock": 20,
       "image": null,
       "disponible": true,
       "is_active": true

@@ -6,7 +6,7 @@
     <x-page-header
         :breadcrumb="['Catálogo', 'Productos']"
         title="Productos"
-        description="Administra el catálogo, precios, disponibilidad y visibilidad de tus productos."
+        description="Administra el catálogo, precios, stock, disponibilidad y visibilidad de tus productos."
     >
         <x-slot:actions>
             <a href="{{ route('products.create') }}" class="ut-btn ut-btn-primary ut-btn-md">
@@ -53,6 +53,7 @@
                         <th scope="col">Producto</th>
                         <th scope="col">Categoría</th>
                         <th scope="col" class="ut-th-right">Precio</th>
+                        <th scope="col" class="ut-th-center">Stock</th>
                         <th scope="col" class="ut-th-center">Disponibilidad</th>
                         <th scope="col">Estado</th>
                         <th scope="col">Actualizado</th>
@@ -88,6 +89,9 @@
                             <td class="text-muted-foreground">{{ $product->category?->name ?? '—' }}</td>
                             <td class="ut-td-right">
                                 <span class="font-mono font-medium"><x-money :value="$product->price" /></span>
+                            </td>
+                            <td class="ut-td-center font-mono font-medium">
+                                <span @class(['text-destructive' => $product->stock === 0])>{{ $product->stock }}</span>
                             </td>
                             <td class="ut-td-center">
                                 <x-badge :tone="$product->disponible ? 'primary' : 'danger'">
@@ -141,7 +145,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7">
+                            <td colspan="8">
                                 <div class="ut-empty">
                                     <span class="flex size-12 items-center justify-center rounded-full bg-muted text-muted-foreground">
                                         <x-icon name="inbox" size="size-6" />

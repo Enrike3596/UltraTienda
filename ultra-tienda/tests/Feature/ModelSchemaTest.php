@@ -101,6 +101,7 @@ class ModelSchemaTest extends TestCase
             'category_id' => $category->id,
             'name' => 'Libro Laravel',
             'price' => 10.5,
+            'stock' => 7,
         ]);
 
         $order = Order::create([
@@ -128,6 +129,7 @@ class ModelSchemaTest extends TestCase
         $this->assertTrue($user->orders->first()->is($order));
         $this->assertTrue($role->users->first()->is($user));
         $this->assertTrue($product->category->is($category));
+        $this->assertSame(7, $product->stock);
         $this->assertTrue($category->products->first()->is($product));
         $this->assertTrue($order->user->is($user));
 

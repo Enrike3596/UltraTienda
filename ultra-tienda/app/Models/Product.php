@@ -19,6 +19,7 @@ class Product extends Model
         'name',
         'description',
         'price',
+        'stock',
         'image',
         'disponible',
         'is_active',
@@ -28,6 +29,7 @@ class Product extends Model
     {
         return [
             'price' => 'decimal:2',
+            'stock' => 'integer',
             'disponible' => 'boolean',
             'is_active' => 'boolean',
         ];

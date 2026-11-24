@@ -64,19 +64,23 @@ class ResourceControllersSmokeTest extends TestCase
             'name' => 'Nuevo producto',
             'description' => 'Descripción',
             'price' => 10,
+            'stock' => 12,
         ])->assertRedirect(route('products.index'))->assertSessionHas('success');
 
         $product = Product::firstWhere('name', 'Nuevo producto');
         $this->assertNotNull($product);
         $this->assertSame($category->id, $product->category_id);
+        $this->assertSame(12, $product->stock);
 
         $this->put("/products/{$product->id}", [
             'category_id' => $category->id,
             'name' => 'Producto editado',
             'price' => 15,
+            'stock' => 4,
         ])->assertRedirect(route('products.index'))->assertSessionHas('success');
 
         $this->assertSame('Producto editado', $product->fresh()->name);
+        $this->assertSame(4, $product->fresh()->stock);
 
         $this->delete("/products/{$product->id}")->assertRedirect(route('products.index'))->assertSessionHas('success');
         $this->assertDatabaseMissing('products', ['id' => $product->id]);
@@ -92,6 +96,15 @@ class ResourceControllersSmokeTest extends TestCase
             'name' => 'Inválido',
             'price' => -1,
         ])->assertSessionHasErrors(['category_id', 'price']);
+
+        $category = $this->makeCategory();
+
+        $this->post('/products', [
+            'category_id' => $category->id,
+            'name' => 'Stock inválido',
+            'price' => 10,
+            'stock' => -5,
+        ])->assertSessionHasErrors(['stock']);
     }
 
     public function test_missing_product_returns_404_on_update_and_destroy(): void

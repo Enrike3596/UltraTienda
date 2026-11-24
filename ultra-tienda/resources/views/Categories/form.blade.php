@@ -23,7 +23,7 @@
         </div>
 
         <div class="ut-field">
-            <label class="ut-label" for="orden">Orden en la tienda</label>
+            <label class="ut-label" for="orden">Orden en la tienda (opcional)</label>
             <input
                 type="number"
                 id="orden"
@@ -35,7 +35,7 @@
             @error('orden')
                 <p class="ut-error">{{ $message }}</p>
             @enderror
-            <p class="ut-hint">Las categorías se muestran de menor a mayor.</p>
+            <p class="ut-hint">Opcional. Las categorías se muestran de menor a mayor; con 0 se ordenan por antigüedad.</p>
         </div>
     </div>
 

@@ -63,6 +63,10 @@
                     <dd class="font-mono font-semibold"><x-money :value="$product->price" /></dd>
                 </div>
                 <div>
+                    <dt class="ut-hint">Cantidad en stock</dt>
+                    <dd class="font-mono font-semibold">{{ $product->stock }}</dd>
+                </div>
+                <div>
                     <dt class="ut-hint">Creado</dt>
                     <dd>{{ $product->created_at?->format('d/m/Y H:i') ?? '—' }}</dd>
                 </div>

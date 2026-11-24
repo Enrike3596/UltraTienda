@@ -53,7 +53,7 @@
                         <th scope="col">Categoría</th>
                         <th scope="col">Descripción</th>
                         <th scope="col" class="ut-th-center">Orden</th>
-                        <th scope="col" class="ut-th-right">Productos</th>
+                        <th scope="col" class="ut-th-right">N.º de productos</th>
                         <th scope="col">Estado</th>
                         <th scope="col" class="ut-th-right">Acciones</th>
                     </tr>
