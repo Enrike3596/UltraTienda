@@ -1,12 +1,12 @@
 @extends('layout.app')
 
-@section('title', 'Pedido #' . $order->id . ' Â· Ultra Tienda')
+@section('title', 'Pedido #' . $order->id . ' · Ultra Tienda')
 
 @section('content')
     @php
         $statusMap = [
             'pending' => ['label' => 'Pendiente', 'tone' => 'outline'],
-            'processing' => ['label' => 'En preparaciÃ³n', 'tone' => 'neutral'],
+            'processing' => ['label' => 'En preparación', 'tone' => 'neutral'],
             'paid' => ['label' => 'Pagado', 'tone' => 'primary'],
             'shipped' => ['label' => 'Enviado', 'tone' => 'info'],
             'delivered' => ['label' => 'Entregado', 'tone' => 'primary'],
@@ -19,6 +19,15 @@
             'paid' => ['label' => 'Pagado', 'tone' => 'primary'],
             'failed' => ['label' => 'Fallido', 'tone' => 'danger'],
             'refunded' => ['label' => 'Reembolsado', 'tone' => 'neutral'],
+        ];
+
+        $paymentMethodMap = [
+            'efectivo' => 'Efectivo',
+            'transferencia' => 'Transferencia bancaria',
+            'contraentrega' => 'Contraentrega',
+            'tarjeta' => 'Tarjeta',
+            'pse' => 'PSE',
+            'otro' => 'Otro',
         ];
 
         $status = $statusMap[$order->status] ?? ['label' => $order->status, 'tone' => 'neutral'];
@@ -64,20 +73,20 @@
             <div class="ut-card-body">
                 <dl class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
                     <div>
-                        <dt class="ut-hint">TelÃ©fono</dt>
-                        <dd class="font-semibold">{{ $order->customer_phone }}</dd>
+                        <dt class="ut-hint">Teléfono</dt>
+                        <dd class="font-semibold break-words">{{ $order->customer_phone ?: 'Sin teléfono registrado' }}</dd>
                     </div>
                     <div>
-                        <dt class="ut-hint">DirecciÃ³n</dt>
-                        <dd class="font-semibold">{{ $order->customer_address }}</dd>
+                        <dt class="ut-hint">Dirección</dt>
+                        <dd class="font-semibold break-words">{{ $order->customer_address ?: 'Sin dirección registrada' }}</dd>
                     </div>
                     <div>
                         <dt class="ut-hint">Usuario</dt>
-                        <dd>{{ $order->user?->name ?? 'Sin usuario vinculado' }}</dd>
+                        <dd class="break-words">{{ $order->user?->name ?? 'Sin usuario vinculado' }}</dd>
                     </div>
                     <div>
-                        <dt class="ut-hint">MÃ©todo de pago</dt>
-                        <dd>{{ $order->payment_method ? ucfirst($order->payment_method) : 'â€”' }}</dd>
+                        <dt class="ut-hint">Método de pago</dt>
+                        <dd>{{ $paymentMethodMap[$order->payment_method] ?? 'Sin método definido' }}</dd>
                     </div>
                     <div>
                         <dt class="ut-hint">Subtotal</dt>
@@ -93,7 +102,7 @@
                     </div>
                     <div>
                         <dt class="ut-hint">Registrado</dt>
-                        <dd>{{ $order->created_at?->format('d/m/Y H:i') ?? 'â€”' }}</dd>
+                        <dd>{{ $order->created_at?->format('d/m/Y H:i') ?? 'Sin fecha registrada' }}</dd>
                     </div>
                 </dl>
             </div>
@@ -165,7 +174,7 @@
                     <thead>
                         <tr>
                             <th scope="col">Fecha</th>
-                            <th scope="col">MÃ©todo</th>
+                            <th scope="col">Método</th>
                             <th scope="col">Estado</th>
                             <th scope="col">Monto</th>
                         </tr>
@@ -178,9 +187,9 @@
                             @endphp
                             <tr>
                                 <td class="whitespace-nowrap text-muted-foreground">
-                                    {{ $paymentRecord->payment_date?->format('d/m/Y H:i') ?? 'â€”' }}
+                                    {{ $paymentRecord->payment_date?->format('d/m/Y H:i') ?? 'Pendiente de pago' }}
                                 </td>
-                                <td>{{ ucfirst($paymentRecord->payment_method) }}</td>
+                                <td>{{ $paymentMethodMap[$paymentRecord->payment_method] ?? 'Otro método' }}</td>
                                 <td>
                                     <x-badge :tone="$recordStatus['tone']">{{ $recordStatus['label'] }}</x-badge>
                                 </td>
@@ -214,7 +223,7 @@
         <form
             method="POST"
             action="{{ route('orders.destroy', $order) }}"
-            data-confirm="{{ 'Â¿Eliminar pedido?|El pedido #' . $order->id . ' de Â«' . $order->customer_name . 'Â» serÃ¡ eliminado permanentemente.' }}"
+            data-confirm="{{ '¿Eliminar pedido?|El pedido #' . $order->id . ' de «' . $order->customer_name . '» será eliminado permanentemente.' }}"
         >
             @csrf
             @method('DELETE')
