@@ -52,10 +52,10 @@
                     <tr>
                         <th scope="col">Categoría</th>
                         <th scope="col">Descripción</th>
-                        <th scope="col" class="ut-th-center">Orden</th>
-                        <th scope="col" class="ut-th-right">N.º de productos</th>
+                        <th scope="col">Orden</th>
+                        <th scope="col">N.º de productos</th>
                         <th scope="col">Estado</th>
-                        <th scope="col" class="ut-th-right">Acciones</th>
+                        <th scope="col">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -79,7 +79,7 @@
                                 {{ $category->description ?: '—' }}
                             </td>
                             <td class="ut-td-center font-mono">{{ $category->orden }}</td>
-                            <td class="ut-td-right font-mono font-medium">{{ $category->products_count }}</td>
+                            <td class="ut-td-center font-mono font-medium">{{ $category->products_count }}</td>
                             <td>
                                 <x-badge :tone="$category->is_active ? 'primary' : 'neutral'">
                                     {{ $category->is_active ? 'Activa' : 'Inactiva' }}

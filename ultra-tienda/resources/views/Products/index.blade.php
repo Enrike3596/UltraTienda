@@ -52,12 +52,12 @@
                     <tr>
                         <th scope="col">Producto</th>
                         <th scope="col">Categoría</th>
-                        <th scope="col" class="ut-th-right">Precio</th>
-                        <th scope="col" class="ut-th-center">Stock</th>
-                        <th scope="col" class="ut-th-center">Disponibilidad</th>
+                        <th scope="col">Precio</th>
+                        <th scope="col">Stock</th>
+                        <th scope="col">Disponibilidad</th>
                         <th scope="col">Estado</th>
                         <th scope="col">Actualizado</th>
-                        <th scope="col" class="ut-th-right">Acciones</th>
+                        <th scope="col">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>

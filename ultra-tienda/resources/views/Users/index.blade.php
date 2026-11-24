@@ -45,7 +45,7 @@
                         <th scope="col">Rol</th>
                         <th scope="col">Correo</th>
                         <th scope="col">Registrado</th>
-                        <th scope="col" class="ut-th-right">Acciones</th>
+                        <th scope="col">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>

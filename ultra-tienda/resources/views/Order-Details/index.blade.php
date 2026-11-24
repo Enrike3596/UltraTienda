@@ -43,10 +43,10 @@
                     <tr>
                         <th scope="col">Pedido</th>
                         <th scope="col">Producto</th>
-                        <th scope="col" class="ut-th-center">Cantidad</th>
-                        <th scope="col" class="ut-th-right">Precio unitario</th>
-                        <th scope="col" class="ut-th-right">Subtotal</th>
-                        <th scope="col" class="ut-th-right">Acciones</th>
+                        <th scope="col">Cantidad</th>
+                        <th scope="col">Precio unitario</th>
+                        <th scope="col">Subtotal</th>
+                        <th scope="col">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>

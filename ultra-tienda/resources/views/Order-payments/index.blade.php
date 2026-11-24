@@ -66,8 +66,8 @@
                         <th scope="col">Fecha</th>
                         <th scope="col">Método</th>
                         <th scope="col">Estado</th>
-                        <th scope="col" class="ut-th-right">Monto</th>
-                        <th scope="col" class="ut-th-right">Acciones</th>
+                        <th scope="col">Monto</th>
+                        <th scope="col">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>

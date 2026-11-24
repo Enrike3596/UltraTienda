@@ -114,9 +114,9 @@
                     <thead>
                         <tr>
                             <th scope="col">Producto</th>
-                            <th scope="col" class="ut-th-center">Cantidad</th>
-                            <th scope="col" class="ut-th-right">Precio unitario</th>
-                            <th scope="col" class="ut-th-right">Subtotal</th>
+                            <th scope="col">Cantidad</th>
+                            <th scope="col">Precio unitario</th>
+                            <th scope="col">Subtotal</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -167,7 +167,7 @@
                             <th scope="col">Fecha</th>
                             <th scope="col">MÃ©todo</th>
                             <th scope="col">Estado</th>
-                            <th scope="col" class="ut-th-right">Monto</th>
+                            <th scope="col">Monto</th>
                         </tr>
                     </thead>
                     <tbody>

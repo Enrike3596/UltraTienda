@@ -73,11 +73,11 @@
                         <th scope="col">Pedido</th>
                         <th scope="col">Cliente</th>
                         <th scope="col">Fecha</th>
-                        <th scope="col" class="ut-th-center">Artículos</th>
-                        <th scope="col" class="ut-th-right">Total</th>
+                        <th scope="col">Artículos</th>
+                        <th scope="col">Total</th>
                         <th scope="col">Estado</th>
                         <th scope="col">Pago</th>
-                        <th scope="col" class="ut-th-right">Acciones</th>
+                        <th scope="col">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>

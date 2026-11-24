@@ -43,8 +43,8 @@
                     <tr>
                         <th scope="col">Rol</th>
                         <th scope="col">Descripción</th>
-                        <th scope="col" class="ut-th-right">Usuarios</th>
-                        <th scope="col" class="ut-th-right">Acciones</th>
+                        <th scope="col">Usuarios</th>
+                        <th scope="col">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
